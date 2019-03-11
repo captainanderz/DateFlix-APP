@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './pages/front.dart';
 import './pages/auth.dart';
 import './pages/logged_in.dart';
+import './pages/create_user.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
           '/': (BuildContext context) => FrontPage(),
           '/auth': (BuildContext context) => AuthPage(),
           '/loggedIn': (BuildContext context) => LoggedInPage(),
+          '/createUser':(BuildContext context) => CreateUserPage(),
         },
       ),
     );

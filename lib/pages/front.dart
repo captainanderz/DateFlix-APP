@@ -5,20 +5,22 @@ class FrontPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Column(
+        child: ListView(
           children: <Widget>[
             SizedBox(
               height: 100.0,
             ),
             Image.asset('assets/images/dateflix.png'),
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+            ),
             RaisedButton(
               padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 70.0),
-              child: Text(
-                'Login',
-                style: TextStyle(
-                    fontSize: 28, color: Color.fromARGB(255,220,39,28),)
-              ),
+              child: Text('Login',
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Color.fromARGB(255, 220, 39, 28),
+                  )),
               onPressed: () {
                 print('Login pressed');
                 Navigator.pushNamed(context, '/auth');
@@ -36,6 +38,7 @@ class FrontPage extends StatelessWidget {
               ),
               onPressed: () {
                 print('Opret ny bruger pressed');
+                Navigator.pushNamed(context, '/createUser');
               },
             )
           ],
