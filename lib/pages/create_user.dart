@@ -1,11 +1,10 @@
-import 'dart:convert';
-import 'dart:async';
 
-import 'package:http/http.dart' as http;
+import '../utilities/bday.dart';
+
 
 import 'package:flutter/material.dart';
-import '../utilities/alert.dart';
 
+import '../http.dart';
 
 class CreateUserPage extends StatefulWidget {
   @override
@@ -21,6 +20,9 @@ class _CreateUserState extends State<CreateUserPage> {
     'lastname': 'Test',
     'username': null,
     'password': null,
+    'year': null,
+    'month': null,
+    'day': null,
     //'image': 'assets/images/NoPicMale.png',
     //'gender': 4,
     //'bio': '',
@@ -113,13 +115,13 @@ class _CreateUserState extends State<CreateUserPage> {
   // No more TextFields to create. Other widgets and functions follows
 
 // Used to check if Password is correct
-/*     Widget _buildPassRepeatTextField() {
+  /*    Widget _buildConfirmPasswordTextField() {
     return TextFormField(
       decoration: InputDecoration(
           labelText: 'Adganskode', labelStyle: TextStyle(fontSize: 24)),
       obscureText: true,
       validator: (String value) {
-        if (value.length < 7) {
+        if (value == _) {
           return 'Adgangskode skal være på minimum 7 tegn.';
         }
       },
@@ -158,7 +160,72 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   } */
 
-  // Function to submit data if it is correct.
+  bool ageCheck(String year) {
+    DateTime current = DateTime.now();
+    return current.year - int.parse(year) >= 18;
+  }
+
+  Widget _buildYearField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: 'År',
+        labelStyle: TextStyle(fontSize: 24),
+      ),
+      validator: (String value) {
+        if (!ageCheck(value)) {
+          return 'Alle brugere skal være minimum 18 år';
+        }
+      },
+      onSaved: (String value) {
+        _formData['year'] = value;
+      },
+    );
+  }
+
+  Widget _buildMonthField() {
+    return TextFormField(keyboardType: TextInputType.number,
+     decoration: InputDecoration(
+        labelText: 'Måned',
+        labelStyle: TextStyle(fontSize: 24),
+      ),
+      validator: (String value) {
+        if (int.parse(value) < 0 || int.parse(value) > 12) {
+          return 'Månederne går fra 1 til 12';
+        }
+      },
+      onSaved: (String value) {
+        _formData['month'] = value;
+      },
+    );
+  }
+
+  Widget _buildDayField() {
+    return TextFormField(keyboardType: TextInputType.number,
+     decoration: InputDecoration(
+        labelText: 'Måned',
+        labelStyle: TextStyle(fontSize: 24),
+      ),
+      validator: (String value) {
+        if (int.parse(value) < 0 || int.parse(value) > 31) {
+          return 'Fejl i dag';
+        }
+      },
+      onSaved: (String value) {
+        _formData['day'] = value;
+      },
+    );
+  }
+
+  bool validDate(String year, String month, String day) {
+    DateTime bday = DateTime(int.parse(year), int.parse(month), int.parse(day));
+    if (bdayToAge(bday) >= 18) {
+      return true;
+    }
+    return false;
+  }
+
+  // Function to submit data.
   void _submitForm() {
     if (!_formKey.currentState.validate()) {
       // .validate runs through all validators
@@ -171,7 +238,7 @@ class _CreateUserState extends State<CreateUserPage> {
     print('VALID');
     print(_formData);
     print('VALID');
-    _createUser(_formData);
+    createUser(_formData, context);
   }
 
   // Builds the submit button
@@ -186,47 +253,6 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  void _createUser(Map<String, dynamic> user) {
-    final Map<String, dynamic> newUser = {
-      'firstName': user['firstname'],
-      'lastName': 'Test from App',
-      'username': user['username'],
-      'password': user['password'],
-    };
-
-    var body = jsonEncode(newUser);
-    Map<String, String> header = {
-          "Accept": "application/json",
-          "content-type": "application/json"
-        };
-
-    print(body);
-    http.post('http://dateflix.captainanderz.com/api/users/register',
-        body: body,
-        headers: header
-        ).then(
-      (http.Response response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertText('Succes!', 'Bruger oprettet');
-            },
-          );
-        } else {
-          print(response.statusCode);
-          print(response.body);
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertText('Hovsa', 'Bruger ikke oprettet');
-            },
-          );
-        }
-      },
-    );
-  } 
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -239,6 +265,9 @@ class _CreateUserState extends State<CreateUserPage> {
               _buildNameTextField(),
               _buildEmailTextField(),
               _buildPasswordTextField(),
+              _buildDayField(),
+              _buildMonthField(),
+              _buildYearField(),
               //_buildGenderDropdownField(),
               _buildBioTextField(),
               _buildCityTextField(),

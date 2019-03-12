@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class User extends Model {
-  final String userId;
+class User {
+  final int userId;
   final String firstName;
-  final String birthday;
+  final DateTime birthday;
   final int gender;
   final String description;
-  final String picture;
+  final List<String> picture;
   final bool hasPicture;
+  final String city;
 
   User(
       {@required this.userId,
@@ -17,5 +18,6 @@ class User extends Model {
       @required this.gender,
       this.description,
       this.picture,
-      this.hasPicture});
+      this.hasPicture,
+      this.city,});
 }
