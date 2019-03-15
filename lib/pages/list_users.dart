@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../scoped_models/users.dart';
+import '../scoped_models/main.dart';
 import '../widgets/users.dart';
 import '../models/user.dart';
 
 class ListUsersPage extends StatefulWidget {
-  final UsersModel model;
+  final MainModel model;
 
   ListUsersPage(this.model);
 
@@ -25,7 +25,7 @@ class _UserListStage extends State<ListUsersPage> {
 
   Widget _buildUserList() {
     return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, UsersModel model) {
+      builder: (BuildContext context, Widget child, MainModel model) {
         Widget content = Center(
           child: Text('Ingen brugere fundet FRA LIST_USERS.DART'),
         );

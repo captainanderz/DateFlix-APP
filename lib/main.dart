@@ -6,7 +6,7 @@ import './pages/auth.dart';
 import './pages/logged_in.dart';
 import './pages/create_user.dart';
 import './pages/list_users.dart';
-import './scoped_models/users.dart';
+import './scoped_models/main.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,9 +22,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final UsersModel model = UsersModel();
+    final MainModel model = MainModel();
 
-    return ScopedModel<UsersModel>(
+    return ScopedModel<MainModel>(
       model: model,
       child: Container(
         child: MaterialApp(

@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 
-class User {
+
+class LocalUser {
   final int userId;
   final String firstName;
   final DateTime birthday;
   final int gender;
+  final String email;
   final String description;
   final List<String> picture;
   final bool hasPicture;
   final String city;
+  final String token;
 
-  User(
+  LocalUser(
       {@required this.userId,
       @required this.firstName,
       @required this.birthday,
+      @required this.email,
       @required this.gender,
       this.description,
       this.picture,
       this.hasPicture,
-      this.city,});
+      this.city,
+      @required this.token});
 }

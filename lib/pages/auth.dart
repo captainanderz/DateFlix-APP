@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped_models/main.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -22,7 +25,7 @@ class _AuthState extends State<AuthPage> {
       validator: (String value) {
         if (value.isEmpty ||
             !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                .hasMatch(value)) {
+                .hasMatch(value.toLowerCase())) {
           return 'Please enter a valid email address';
         }
       },
@@ -50,13 +53,18 @@ class _AuthState extends State<AuthPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function authenticate) async {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
-    Navigator.pop(context);
-    Navigator.pushReplacementNamed(context, '/loggedIn');
+
+    final Map<String, dynamic> responseInfo =
+        await authenticate(_formData['email'], _formData['password']);
+    if (responseInfo['success']) {
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, '/loggedIn');
+    }
   }
 
   @override
@@ -85,16 +93,24 @@ class _AuthState extends State<AuthPage> {
                     SizedBox(
                       height: 65.0,
                     ),
-                    RaisedButton(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 25.0, horizontal: 70.0),
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                            fontSize: 28,
-                            color: Color.fromRGBO(220, 28, 39, 1)),
-                      ),
-                      onPressed: _submitForm,
+                    ScopedModelDescendant(
+                      builder: (BuildContext context, Widget child,
+                          MainModel model) {
+                        return model.isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : RaisedButton(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 25.0, horizontal: 70.0),
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      fontSize: 28,
+                                      color: Color.fromRGBO(220, 28, 39, 1)),
+                                ),
+                                onPressed: () =>
+                                    _submitForm(model.authenticate),
+                              );
+                      },
                     )
                   ],
                 ),

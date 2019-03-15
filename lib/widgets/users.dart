@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './user_card.dart';
-import '../scoped_models/users.dart';
+import '../scoped_models/main.dart';
 import '../models/user.dart';
 
 class Users extends StatelessWidget {
@@ -23,7 +23,7 @@ class Users extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UsersModel>(builder: (BuildContext context, Widget child, UsersModel model) {
+    return ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
       return _buildUserList(model.users);
     },);
   }

@@ -1,10 +1,11 @@
-
-import '../utilities/bday.dart';
-
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-import '../http.dart';
+import '../utilities/bday.dart';
+import '../scoped_models/main.dart';
+import '../utilities/alert.dart';
 
 class CreateUserPage extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _CreateUserState extends State<CreateUserPage> {
 
   // Key used to point out whic form is being used
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
 
   // Building widgets for the different TextFormFields
   // builds field for Name
@@ -77,9 +79,26 @@ class _CreateUserState extends State<CreateUserPage> {
       decoration: InputDecoration(
           labelText: 'Adganskode', labelStyle: TextStyle(fontSize: 24)),
       obscureText: true,
+      controller: _passwordController,
       validator: (String value) {
         if (value.length < 7) {
           return 'Adgangskode skal være på minimum 7 tegn.';
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
+      },
+    );
+  }
+
+  Widget _buildPasswordConfirmTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+          labelText: 'Bekræft adganskode', labelStyle: TextStyle(fontSize: 24)),
+      obscureText: true,
+      validator: (String value) {
+        if (value != _passwordController.text) {
+          return 'Adgangskoden stemmer ikke overens';
         }
       },
       onSaved: (String value) {
@@ -113,23 +132,6 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   // No more TextFields to create. Other widgets and functions follows
-
-// Used to check if Password is correct
-  /*    Widget _buildConfirmPasswordTextField() {
-    return TextFormField(
-      decoration: InputDecoration(
-          labelText: 'Adganskode', labelStyle: TextStyle(fontSize: 24)),
-      obscureText: true,
-      validator: (String value) {
-        if (value == _) {
-          return 'Adgangskode skal være på minimum 7 tegn.';
-        }
-      },
-      onSaved: (String value) {
-        _formData['password'] = value;
-      },
-    );
-  } */
 
 // Dropdown to insert gender
 /*   Widget _buildGenderDropdownField() {
@@ -184,8 +186,9 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   Widget _buildMonthField() {
-    return TextFormField(keyboardType: TextInputType.number,
-     decoration: InputDecoration(
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
         labelText: 'Måned',
         labelStyle: TextStyle(fontSize: 24),
       ),
@@ -201,9 +204,10 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   Widget _buildDayField() {
-    return TextFormField(keyboardType: TextInputType.number,
-     decoration: InputDecoration(
-        labelText: 'Måned',
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: 'Dag',
         labelStyle: TextStyle(fontSize: 24),
       ),
       validator: (String value) {
@@ -226,7 +230,7 @@ class _CreateUserState extends State<CreateUserPage> {
   }
 
   // Function to submit data.
-  void _submitForm() {
+  void _submitForm(Function createUser) async {
     if (!_formKey.currentState.validate()) {
       // .validate runs through all validators
       print('NOT VALID');
@@ -238,18 +242,33 @@ class _CreateUserState extends State<CreateUserPage> {
     print('VALID');
     print(_formData);
     print('VALID');
-    createUser(_formData, context);
+    final Map<String, dynamic> responseInfo = await createUser(_formData);
+    print(responseInfo);
+    print(responseInfo['title']);
+    print(responseInfo['message']);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertText(responseInfo['title'].toString(), responseInfo['message'].toString());
+        });
   }
 
   // Builds the submit button
   Widget _submitButton() {
-    return RaisedButton(
-      padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 70.0),
-      child: Text(
-        'Opret',
-        style: TextStyle(fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
-      ),
-      onPressed: _submitForm,
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return model.isLoading
+            ? Center(child: CircularProgressIndicator())
+            : RaisedButton(
+                padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 70.0),
+                child: Text(
+                  'Opret',
+                  style: TextStyle(
+                      fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
+                ),
+                onPressed: () => _submitForm(model.createUser),
+              );
+      },
     );
   }
 
@@ -265,6 +284,7 @@ class _CreateUserState extends State<CreateUserPage> {
               _buildNameTextField(),
               _buildEmailTextField(),
               _buildPasswordTextField(),
+              _buildPasswordConfirmTextField(),
               _buildDayField(),
               _buildMonthField(),
               _buildYearField(),
