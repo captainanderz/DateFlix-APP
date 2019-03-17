@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
 
+// 3.1.1
 class AuthPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -10,11 +11,14 @@ class AuthPage extends StatefulWidget {
   }
 }
 
+// 3.1.2
 class _AuthState extends State<AuthPage> {
-  final Map<String, String> _formData = {'email': null, 'password': null};
+  final Map<String, String> _formData = {'email': null, 'password': null};      // Storage for input data
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+// 3.1.2.1
+// Builds TextFormField for email input
   Widget _buildEmailTextField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -25,8 +29,8 @@ class _AuthState extends State<AuthPage> {
       validator: (String value) {
         if (value.isEmpty ||
             !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                .hasMatch(value.toLowerCase())) {
-          return 'Please enter a valid email address';
+              .hasMatch(value.toLowerCase())) {                                 // Setting value to lowercase, because this RegExp only accepts lowercase
+          return 'Indtast venligst en gyldig emailadresse';
         }
       },
       onSaved: (String value) {
@@ -35,6 +39,8 @@ class _AuthState extends State<AuthPage> {
     );
   }
 
+// 3.1.2.2
+// Builds TextFormField for password input
   Widget _buildPasswordTextField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -44,7 +50,7 @@ class _AuthState extends State<AuthPage> {
       obscureText: true,
       validator: (String value) {
         if (value.isEmpty || value.length < 7) {
-          return 'Passwords invalid';
+          return 'Ugyldig adgangskode';
         }
       },
       onSaved: (String value) {
@@ -53,6 +59,8 @@ class _AuthState extends State<AuthPage> {
     );
   }
 
+// 3.1.2.3
+// builds function for Submit button
   void _submitForm(Function authenticate) async {
     if (!_formKey.currentState.validate()) {
       return;
@@ -67,6 +75,7 @@ class _AuthState extends State<AuthPage> {
     }
   }
 
+// 3.1.2.4
   @override
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
@@ -97,12 +106,12 @@ class _AuthState extends State<AuthPage> {
                       builder: (BuildContext context, Widget child,
                           MainModel model) {
                         return model.isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : RaisedButton(
+                            ? Center(child: CircularProgressIndicator())      // Shows loading when then app is loading
+                            : RaisedButton(                                   // Shows login-button when the app isn't loading
                                 padding: EdgeInsets.symmetric(
                                     vertical: 25.0, horizontal: 70.0),
                                 child: Text(
-                                  'Login',
+                                  'Log ind',
                                   style: TextStyle(
                                       fontSize: 28,
                                       color: Color.fromRGBO(220, 28, 39, 1)),

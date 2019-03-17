@@ -7,6 +7,8 @@ import '../utilities/bday.dart';
 import '../scoped_models/main.dart';
 import '../utilities/alert.dart';
 
+
+// 3.2.1
 class CreateUserPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -14,6 +16,7 @@ class CreateUserPage extends StatefulWidget {
   }
 }
 
+// 3.2.2
 class _CreateUserState extends State<CreateUserPage> {
   // Used to save data from submitform
   final Map<String, dynamic> _formData = {
@@ -35,6 +38,7 @@ class _CreateUserState extends State<CreateUserPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
 
+  // 3.2.2.1
   // Building widgets for the different TextFormFields
   // builds field for Name
   Widget _buildNameTextField() {
@@ -52,6 +56,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.2
   // Builds field for Email
   // Uses regular expression to check if it is a valid email
   Widget _buildEmailTextField() {
@@ -73,6 +78,7 @@ class _CreateUserState extends State<CreateUserPage> {
         });
   }
 
+  // 3.2.2.3
   // Bields field for Password
   Widget _buildPasswordTextField() {
     return TextFormField(
@@ -90,7 +96,8 @@ class _CreateUserState extends State<CreateUserPage> {
       },
     );
   }
-
+  
+  // 3.2.2.4
   Widget _buildPasswordConfirmTextField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -107,6 +114,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.5
   // Builds field for Bio (or description, Bio is just shorter)
   Widget _buildBioTextField() {
     return TextFormField(
@@ -118,6 +126,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.6
   // Builds field for City
   Widget _buildCityTextField() {
     return TextFormField(
@@ -133,8 +142,9 @@ class _CreateUserState extends State<CreateUserPage> {
 
   // No more TextFields to create. Other widgets and functions follows
 
+// 3.2.2.7
 // Dropdown to insert gender
-/*   Widget _buildGenderDropdownField() {
+  Widget _buildGenderDropdownField() {
     final Map<String, int> _genders = {'Mand': 0, 'Kvinde': 1, 'Andet': 2};
     String dropdownValue = '';
     return DropdownButtonFormField<String>(
@@ -160,13 +170,15 @@ class _CreateUserState extends State<CreateUserPage> {
         _formData['gender'] = _genders[value];
       },
     );
-  } */
+  }
 
+  // 3.2.2.8
   bool ageCheck(String year) {
     DateTime current = DateTime.now();
     return current.year - int.parse(year) >= 18;
   }
 
+  // 3.2.2.9
   Widget _buildYearField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -185,6 +197,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.10
   Widget _buildMonthField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -203,6 +216,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.11
   Widget _buildDayField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -221,6 +235,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.12
   bool validDate(String year, String month, String day) {
     DateTime bday = DateTime(int.parse(year), int.parse(month), int.parse(day));
     if (bdayToAge(bday) >= 18) {
@@ -229,6 +244,7 @@ class _CreateUserState extends State<CreateUserPage> {
     return false;
   }
 
+  // 3.2.2.13
   // Function to submit data.
   void _submitForm(Function createUser) async {
     if (!_formKey.currentState.validate()) {
@@ -249,10 +265,12 @@ class _CreateUserState extends State<CreateUserPage> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertText(responseInfo['title'].toString(), responseInfo['message'].toString());
+          return AlertText(responseInfo['title'].toString(),
+              responseInfo['message'].toString());
         });
   }
 
+  // 3.2.2.14
   // Builds the submit button
   Widget _submitButton() {
     return ScopedModelDescendant<MainModel>(
@@ -272,6 +290,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  // 3.2.2.15
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -288,7 +307,7 @@ class _CreateUserState extends State<CreateUserPage> {
               _buildDayField(),
               _buildMonthField(),
               _buildYearField(),
-              //_buildGenderDropdownField(),
+              _buildGenderDropdownField(),
               _buildBioTextField(),
               _buildCityTextField(),
               _submitButton(),

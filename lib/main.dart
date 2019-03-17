@@ -8,25 +8,39 @@ import './pages/create_user.dart';
 import './pages/list_users.dart';
 import './scoped_models/main.dart';
 
+// 2.1
 void main() {
-  runApp(MyApp());
+  runApp(Dateflix());
 }
 
-class MyApp extends StatefulWidget {
+// 2.2
+class Dateflix extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _MyAppState();
+    return _DateflixState();
   }
 }
 
-class _MyAppState extends State<MyApp> {
-  final MainModel model = MainModel();
-  bool _isAuthenticated = false;
+// 2.3
+class _DateflixState extends State<Dateflix> {
+  final MainModel model = MainModel();                    // Intanciate MainModel
+  bool _isAuthenticated = false;                          // Assumes user is the authenticated at startup
 
+// 2.3.1
+  @override
+  void initState() {
+    model.autoAuthenticate();
+    model.userSubject.listen((bool isAuthenticated) {
+      setState(() {
+       _isAuthenticated = isAuthenticated;
+      });
+    });
+    super.initState();
+  }
+
+// 2.3.2
   @override
   Widget build(BuildContext context) {
-    
-
     return ScopedModel<MainModel>(
       model: model,
       child: Container(
@@ -41,8 +55,9 @@ class _MyAppState extends State<MyApp> {
                 buttonColor: Color.fromRGBO(38, 35, 35, 1)),
             fontFamily: 'Bebas',
           ),
+          // All routes go here, for simplicity.
           routes: {
-            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage,
+            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(),
             '/auth': (BuildContext context) => AuthPage(),
             '/loggedIn': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(),
             '/createUser': (BuildContext context) => CreateUserPage(),
