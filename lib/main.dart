@@ -20,9 +20,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final MainModel model = MainModel();
+  bool _isAuthenticated = false;
+
   @override
   Widget build(BuildContext context) {
-    final MainModel model = MainModel();
+    
 
     return ScopedModel<MainModel>(
       model: model,
@@ -39,11 +42,11 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'Bebas',
           ),
           routes: {
-            '/': (BuildContext context) => FrontPage(),
+            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage,
             '/auth': (BuildContext context) => AuthPage(),
-            '/loggedIn': (BuildContext context) => LoggedInPage(),
+            '/loggedIn': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(),
             '/createUser': (BuildContext context) => CreateUserPage(),
-            '/listUsers': (BuildContext context) => ListUsersPage(model),
+            '/listUsers': (BuildContext context) => !_isAuthenticated ? FrontPage() : ListUsersPage(model),
           },
         ),
       ),

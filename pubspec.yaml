@@ -1,5 +1,5 @@
 name: dateflix
-description: A new Flutter project.
+description: Flutter project for apprenticeship at TEC.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,12 +16,14 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
+# 1.1
 dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0+1
   scoped_model: ^1.0.1
   shared_preferences: ^0.5.1+1
+  rxdart: ^0.21.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,6 +45,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # 1.2
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/dateflix.png
@@ -61,6 +64,8 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+
+  # 1.3
   fonts:
     - family: Bebas
       fonts:

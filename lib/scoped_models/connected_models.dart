@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rxdart/subjects.dart';
 
 import '../models/user.dart';
 import '../models/local_user.dart';
@@ -56,6 +57,11 @@ mixin ConnectedModels on Model {
 
 mixin LocalUserModel on ConnectedModels {
   Timer _authTimer;
+  PublishSubject<bool> _userSubject = PublishSubject();
+
+  PublishSubject<bool> get userSubject {
+    return _userSubject;
+  }
 
   LocalUser get user {
     return _authenticatedUser;
@@ -74,29 +80,31 @@ mixin LocalUserModel on ConnectedModels {
         body: json.encode({"username": email, "password": password}));
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
-    isLoading =false;
+    isLoading = false;
     notifyListeners();
-    if(!responseData.containsKey('message'))
-    {
+    if (!responseData.containsKey('message')) {
       hasError = false;
       message = 'Login successful';
 
       _authenticatedUser = LocalUser(
-        userId: responseData['id'],
-        firstName: responseData['firstName'],
-        birthday: responseData['birthday'],
-        email: responseData['email'],
-        description: responseData['description'],
-        gender: responseData['gender'],
-        hasPicture: false,
-        city: responseData['city'],
-        token: responseData['token']
-      );
+          userId: responseData['id'],
+          firstName: responseData['firstName'],
+          birthday: responseData['birthday'],
+          email: responseData['email'],
+          description: responseData['description'],
+          gender: responseData['gender'],
+          hasPicture: false,
+          city: responseData['city'],
+          token: responseData['token']);
+      setAuthTimeout(60);
+      _userSubject.add(true);
       final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final DateTime now = DateTime.now();
+      final DateTime expirationDate = now.add(Duration(seconds: 60));
       prefs.setString('userId', responseData['id']);
       prefs.setString('email', responseData['email']);
       prefs.setString('token', responseData['token']);
-
+      prefs.setString('expirationDate', expirationDate.toIso8601String());
     } else if (responseData['message'] == 'Username or password is incorrect') {
       hasError = false;
       message = 'Forkert brugernavn eller adgangskode';
@@ -104,14 +112,42 @@ mixin LocalUserModel on ConnectedModels {
     return {'success': !hasError, 'message': message};
   }
 
-  
+  void autoAuthenticate() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token');
+    final String expirationDateString = prefs.getString('expirationDate');
+    if (token != null) {
+      final DateTime now = DateTime.now();
+      final DateTime parsedExpirationDate =
+          DateTime.parse(expirationDateString);
+      if (parsedExpirationDate.isBefore(now)) {
+        _authenticatedUser = null;
+        notifyListeners();
+        return;
+      }
+      final String userEmail = prefs.getString('email');
+      final String userId = prefs.getString('userId');
+      final int tokenLifeSpan = parsedExpirationDate.difference(now).inSeconds;
+      _authenticatedUser =
+          LocalUser(userId: int.parse(userId), email: userEmail, token: token);
+      _userSubject.add(true);
+      setAuthTimeout(tokenLifeSpan);
+      notifyListeners();
+    }
+  }
 
   void logout() async {
     _authenticatedUser = null;
+    _authTimer.toString();
+    _userSubject.add(false);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('userId');
     prefs.remove('email');
+  }
+
+  void setAuthTimeout(int time) {
+    _authTimer = Timer(Duration(seconds: time), logout);
   }
 }
 

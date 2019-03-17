@@ -15,10 +15,10 @@ class LocalUser {
 
   LocalUser(
       {@required this.userId,
-      @required this.firstName,
-      @required this.birthday,
+      this.firstName,
+      this.birthday,
       @required this.email,
-      @required this.gender,
+      this.gender,
       this.description,
       this.picture,
       this.hasPicture,
