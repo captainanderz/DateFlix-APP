@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped_models/main.dart';
 
 class LoggedInPage extends StatelessWidget {
   @override
@@ -19,13 +22,25 @@ class LoggedInPage extends StatelessWidget {
       body: Container(
         color: Theme.of(context).backgroundColor,
         child: Center(
-          child: RaisedButton(
-            child: Text('Se alle brugere'),
-            onPressed: () {
-              Navigator.pushNamed(context, '/listUsers');
-            },
-          ),
-        ),
+            child: Column(
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Se alle brugere'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/listUsers');
+              },
+            ),
+            ScopedModelDescendant(
+                builder: (BuildContext context, Widget child, MainModel model) {
+              return RaisedButton(
+                child: Text('Like test'),
+                onPressed: () {
+                  model.likeProfile(29, 32);
+                },
+              );
+            }),
+          ],
+        )),
       ),
     );
   }

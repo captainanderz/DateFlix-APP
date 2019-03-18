@@ -49,7 +49,7 @@ class _AuthState extends State<AuthPage> {
       ),
       obscureText: true,
       validator: (String value) {
-        if (value.isEmpty || value.length < 7) {
+        if (value.isEmpty) {
           return 'Ugyldig adgangskode';
         }
       },

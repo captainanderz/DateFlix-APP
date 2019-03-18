@@ -78,7 +78,7 @@ mixin LocalUserModel on ConnectedModels {
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/users/authenticate',
         headers: header,
-        body: json.encode({"username": email, "password": password}));
+        body: json.encode({"email": email, "password": password}));
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
     isLoading = false;
@@ -99,7 +99,7 @@ mixin LocalUserModel on ConnectedModels {
           hasPicture: false,
           city: responseData['city'],
           token: responseData['token']);
-          print('LocalUser created');
+      print('LocalUser created');
       setAuthTimeout(60);
       print('Setting AuthTimeout');
       _userSubject.add(true);
@@ -145,7 +145,7 @@ mixin LocalUserModel on ConnectedModels {
   void logout() async {
     _authenticatedUser = null;
     _authTimer.toString();
-    _userSubject.add(false); 
+    _userSubject.add(false);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('userId');
@@ -203,5 +203,19 @@ mixin UsersModel on ConnectedModels {
       notifyListeners();
       return;
     });
+  }
+
+  Future<Null> likeProfile(int id, int likeId) async {
+    isLoading = true;
+    notifyListeners();
+
+    http.Response response = await http.post(
+        'http://dateflix.captainanderz.com/api/date/like',
+        headers: header,
+        body: json.encode({"userId": id, "likedId": likeId}));
+        print(response);
+        if(response.body.isNotEmpty){
+        print(json.decode(response.body));
+        }
   }
 }

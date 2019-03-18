@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../models/user.dart';
 import '../utilities/bday.dart';
+import '../scoped_models/main.dart';
 
 class UserCard extends StatelessWidget {
   final User user;
@@ -17,6 +18,31 @@ class UserCard extends StatelessWidget {
       return Text('Kvinde');
     }
     return Text('Andet');
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget child, MainModel model) {
+      return ButtonBar(
+        alignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.cancel),
+            color: Colors.red,
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.help),
+            color: Colors.orangeAccent,
+            onPressed: () {},),
+          IconButton(
+            icon: Icon(Icons.check_circle),
+            color: Colors.green,
+            onPressed: () {},
+          )
+        ],
+      );
+    });
   }
 
   @override
@@ -36,7 +62,7 @@ class UserCard extends StatelessWidget {
                   placeholder: AssetImage('assets/images/noPic.png'),
                 )
               : Image.asset('assets/images/noPic.png'),
-          Row(children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
             Text(user.firstName),
             genToText(user),
             Text(
@@ -44,8 +70,9 @@ class UserCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
               ),
-            )
-          ])
+            ),
+          ]),
+          _buildActionButtons(context)
         ],
       ),
     );
