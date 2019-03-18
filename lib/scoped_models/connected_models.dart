@@ -8,6 +8,7 @@ import 'package:rxdart/subjects.dart';
 
 import '../models/user.dart';
 import '../models/local_user.dart';
+import '../utilities/bday.dart';
 
 mixin ConnectedModels on Model {
   List<User> _users = [];
@@ -86,22 +87,27 @@ mixin LocalUserModel on ConnectedModels {
       hasError = false;
       message = 'Login successful';
 
+      DateTime bday = stringToDateTime(responseData['birthday']);
+
       _authenticatedUser = LocalUser(
           userId: responseData['id'],
           firstName: responseData['firstName'],
-          birthday: responseData['birthday'],
+          birthday: bday,
           email: responseData['email'],
           description: responseData['description'],
           gender: responseData['gender'],
           hasPicture: false,
           city: responseData['city'],
           token: responseData['token']);
+          print('LocalUser created');
       setAuthTimeout(60);
+      print('Setting AuthTimeout');
       _userSubject.add(true);
+      print('Event true');
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final DateTime now = DateTime.now();
       final DateTime expirationDate = now.add(Duration(seconds: 60));
-      prefs.setString('userId', responseData['id']);
+      prefs.setString('userId', responseData['id'].toString());
       prefs.setString('email', responseData['email']);
       prefs.setString('token', responseData['token']);
       prefs.setString('expirationDate', expirationDate.toIso8601String());
@@ -139,7 +145,7 @@ mixin LocalUserModel on ConnectedModels {
   void logout() async {
     _authenticatedUser = null;
     _authTimer.toString();
-    _userSubject.add(false);
+    _userSubject.add(false); 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('userId');

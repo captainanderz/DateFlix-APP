@@ -20,9 +20,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # 1.1.1
   http: ^0.12.0+1
+  # 1.1.2
   scoped_model: ^1.0.1
+  # 1.1.3
   shared_preferences: ^0.5.1+1
+  # 1.1.4
   rxdart: ^0.21.0
   flutter_range_slider: "^0.0.4"
 
