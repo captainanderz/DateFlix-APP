@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped_models/main.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => new _HomePageState();
@@ -28,6 +32,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               color: new Color.fromRGBO(220, 28, 39, 1), fontSize: 32.0),
         ),
         automaticallyImplyLeading: false,
+      ),
+      body: Container(
+        color: Theme.of(context).backgroundColor,
+        child: Center(
+            child: Column(
+              children: <Widget>[
+                RaisedButton(
+                  child: Text('Se alle brugere'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/listUsers');
+                  },
+                ),
+                ScopedModelDescendant(
+                    builder: (BuildContext context, Widget child, MainModel model) {
+                      return RaisedButton(
+                        child: Text('Like test'),
+                        onPressed: () {
+                        },
+                      );
+                    }),
+              ],
+            )),
       ),
     );
   }
