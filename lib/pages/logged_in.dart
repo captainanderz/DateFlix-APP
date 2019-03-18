@@ -35,7 +35,6 @@ class LoggedInPage extends StatelessWidget {
               return RaisedButton(
                 child: Text('Like test'),
                 onPressed: () {
-                  model.likeProfile(29, 32);
                 },
               );
             }),

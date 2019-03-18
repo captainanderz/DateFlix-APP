@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,41 +20,6 @@ mixin ConnectedModels on Model {
     "Accept": "application/json",
     "content-type": "application/json"
   };
-
-  Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
-    isLoading = true;
-    notifyListeners();
-    final String bday =
-        user['year'] + '-' + user['month'] + '-' + user['day'] + 'T00:00:00';
-    final Map<String, dynamic> newUser = {
-      'firstName': user['firstname'],
-      'lastName': 'TestFromApp',
-      'username': user['username'],
-      'password': user['password'],
-      'birthday': bday
-    };
-
-    bool success = false;
-    String title = 'Fejl';
-    String message = 'Hovsa... Noget gik galt';
-
-    var body = jsonEncode(newUser);
-
-    http.Response response = await http.post(
-        'http://dateflix.captainanderz.com/api/users/register',
-        body: body,
-        headers: header);
-
-    print(response.body);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      success = true;
-      title = 'Success!';
-      message = 'Bruger oprettet';
-    }
-    isLoading = false;
-    notifyListeners();
-    return {'success': success, 'title': title, 'message': message};
-  }
 }
 
 mixin LocalUserModel on ConnectedModels {
@@ -162,6 +128,41 @@ mixin UsersModel on ConnectedModels {
     return List.from(_users);
   }
 
+  Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
+    isLoading = true;
+    notifyListeners();
+    final String bday =
+        user['year'] + '-' + user['month'] + '-' + user['day'] + 'T00:00:00';
+    final Map<String, dynamic> newUser = {
+      'firstName': user['firstname'],
+      'lastName': 'TestFromApp',
+      'username': user['username'],
+      'password': user['password'],
+      'birthday': bday
+    };
+
+    bool success = false;
+    String title = 'Fejl';
+    String message = 'Hovsa... Noget gik galt';
+
+    var body = jsonEncode(newUser);
+
+    http.Response response = await http.post(
+        'http://dateflix.captainanderz.com/api/users/register',
+        body: body,
+        headers: header);
+
+    print(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      success = true;
+      title = 'Success!';
+      message = 'Bruger oprettet';
+    }
+    isLoading = false;
+    notifyListeners();
+    return {'success': success, 'title': title, 'message': message};
+  }
+
   Future<Null> fetchUsers() {
     isLoading = true;
 
@@ -205,17 +206,22 @@ mixin UsersModel on ConnectedModels {
     });
   }
 
-  Future<Null> likeProfile(int id, int likeId) async {
+  Future<bool> likeProfile(int userId, int likedId) async {
     isLoading = true;
     notifyListeners();
 
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/date/like',
         headers: header,
-        body: json.encode({"userId": id, "likedId": likeId}));
-        print(response);
-        if(response.body.isNotEmpty){
-        print(json.decode(response.body));
-        }
+        body: json.encode({"userId": userId, "likedId": likedId}));
+    print(response);
+    if (response.body.isNotEmpty) {
+      print(json.decode(response.body));
+      if(json.decode(response.body))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 }
