@@ -33,8 +33,6 @@ class _DateflixState extends State<Dateflix> {
 
 // 2.3.1
   @override
-  Widget build(BuildContext context) {
-
   void initState() {
     model.autoAuthenticate();
     model.userSubject.listen((bool isAuthenticated) {
