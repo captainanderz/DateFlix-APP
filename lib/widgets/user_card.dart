@@ -6,6 +6,7 @@ import '../models/user.dart';
 import '../models/local_user.dart';
 import '../utilities/bday.dart';
 import '../scoped_models/main.dart';
+import '../pages/match.dart';
 
 class UserCard extends StatelessWidget {
   final User user;
@@ -20,40 +21,6 @@ class UserCard extends StatelessWidget {
       return Text('Kvinde');
     }
     return Text('Andet');
-  }
-
-  Widget _buildMatchContent(BuildContext context, User user, LocalUser lUser) {
-    return Container(
-        child: Row(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            lUser.hasPicture
-                ? FadeInImage(
-                    image: NetworkImage(lUser.picture[0]),
-                    height: 300.0,
-                    fit: BoxFit.cover,
-                    placeholder: AssetImage('assets/images/noPic.png'),
-                  )
-                : Image.asset('assets/images/noPic.png'),
-            Text(lUser.firstName)
-          ],
-        ),
-        Column(
-          children: <Widget>[
-            user.hasPicture
-                ? FadeInImage(
-                    image: NetworkImage(user.picture[0]),
-                    height: 300.0,
-                    fit: BoxFit.cover,
-                    placeholder: AssetImage('assets/images/noPic.png'),
-                  )
-                : Image.asset('assets/images/noPic.png'),
-            Text(user.firstName)
-          ],
-        )
-      ],
-    ));
   }
 
   Widget _buildActionButtons(BuildContext context) {
@@ -75,31 +42,33 @@ class UserCard extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.check_circle),
             color: Colors.green,
-            onPressed: () async {
-              if ((await model.likeProfile(model.user.userId, user.userId)) ==
-                  true) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      AlertDialog(
-                        title: Text('Det er et match!'),
-                        content: _buildMatchContent(context, user, model.user),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Nice'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        ],
-                      );
-                    });
-              }
-              return;
+            onPressed: () {
+            model.likeProfile(model.user.userId, user.userId);
             },
           )
         ],
       );
     });
   }
+
+// if ((await model.likeProfile(model.user.userId, user.userId)) ==
+//                   true) {
+//                 showDialog(
+//                   context: context,
+//                   builder: (BuildContext context) {
+//                     AlertDialog(
+//                       title: Text('Det er et match!'),
+//                       content: _buildMatchContent(context, user, model.user),
+//                       actions: <Widget>[
+//                         FlatButton(
+//                           child: Text('Nice'),
+//                           onPressed: () => Navigator.of(context).pop(),
+//                         )
+//                       ],
+//                     );
+//                   },
+//                 );
+//               }
 
   @override
   Widget build(BuildContext context) {

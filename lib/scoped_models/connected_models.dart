@@ -136,7 +136,7 @@ mixin UsersModel on ConnectedModels {
     final Map<String, dynamic> newUser = {
       'firstName': user['firstname'],
       'lastName': 'TestFromApp',
-      'username': user['username'],
+      'email': user['email'],
       'password': user['password'],
       'birthday': bday
     };
@@ -217,11 +217,14 @@ mixin UsersModel on ConnectedModels {
     print(response);
     if (response.body.isNotEmpty) {
       print(json.decode(response.body));
-      if(json.decode(response.body))
-      {
+      if (json.decode(response.body)) {
+        isLoading = false;
+        notifyListeners();
         return true;
       }
     }
+    isLoading = false;
+    notifyListeners();
     return false;
   }
 }

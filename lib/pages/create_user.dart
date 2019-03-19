@@ -74,7 +74,7 @@ class _CreateUserState extends State<CreateUserPage> {
           }
         },
         onSaved: (String value) {
-          _formData['username'] = value;
+          _formData['email'] = value;
         });
   }
 
@@ -149,11 +149,11 @@ class _CreateUserState extends State<CreateUserPage> {
     String dropdownValue = '';
     return DropdownButtonFormField<String>(
       value: dropdownValue,
-      validator: (String value) {
-        if (!_genders.containsValue(value)) {
-          return 'Der er ikke valgt et køn';
-        }
-      },
+      // validator: (String value) {
+      //   if (!_genders.containsValue(value)) {
+      //     return 'Der er ikke valgt et køn';
+      //   }
+      // },
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
