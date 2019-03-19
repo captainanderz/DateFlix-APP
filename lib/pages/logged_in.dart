@@ -1,45 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:dateflix/pages/home.dart';
+import 'package:dateflix/pages/account.dart';
+import 'package:dateflix/pages/chat.dart';
 
-import '../scoped_models/main.dart';
 
-class LoggedInPage extends StatelessWidget {
+class LoggedInPage extends StatefulWidget {
+  @override
+  _LoggedInPage createState() => new _LoggedInPage();
+}
+
+class _LoggedInPage extends State<LoggedInPage> with SingleTickerProviderStateMixin {
+  TabController controller;
+  int index = 0;
+
+  void initState() {
+    super.initState();
+    controller = new TabController(length: 3, vsync: this);
+    controller.addListener(() {
+      this.setState(() {
+        index = controller.index;
+        // print(index);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    Size screenSize = MediaQuery.of(context).size;
+
+
+    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.dark,
-        title: Text(
-          'Dateflix',
-          style: TextStyle(color: Colors.white70),
-        ),
-        leading: Icon(
-          Icons.menu,
-          color: Colors.white70,
-        ),
-        backgroundColor: Color.fromRGBO(38, 35, 35, 1),
-      ),
-      body: Container(
-        color: Theme.of(context).backgroundColor,
-        child: Center(
-            child: Column(
-          children: <Widget>[
-            RaisedButton(
-              child: Text('Se alle brugere'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/listUsers');
-              },
+      bottomNavigationBar: new Container(
+        height: screenSize.height / 12,
+        child: new TabBar(
+          tabs: <Tab>[
+            new Tab(
+              child: new Container(
+                width: 30.0,
+                height: 30.0,
+                child: new Icon(Icons.home,
+                  color: Colors.white70,
+                ),
+              ),
             ),
-            ScopedModelDescendant(
-                builder: (BuildContext context, Widget child, MainModel model) {
-              return RaisedButton(
-                child: Text('Like test'),
-                onPressed: () {
-                },
-              );
-            }),
+            new Tab(
+              child: new Container(
+                width: 30.0,
+                height: 30.0,
+                child: new Icon(Icons.chat,
+                  color: Colors.white70,
+                ),
+              ),
+            ),
+            new Tab(
+              child: new Container(
+                width: 30.0,
+                height: 30.0,
+                child: new Icon(Icons.account_box,
+                  color: Colors.white70,
+                ),
+              ),
+            ),
           ],
-        )),
+          controller: controller,
+        ),
+      ),
+      body: new TabBarView(
+        children: <Widget>[new HomePage(), new Chat(), new Profile()],
+        controller: controller,
       ),
     );
   }
