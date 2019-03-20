@@ -14,11 +14,6 @@ class LoggedInPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.dark,
-          backgroundColor: Color.fromRGBO(38, 35, 35, 1),
-          title: Text('Matches', style: TextStyle(color: Colors.white),)
-        ),
         bottomNavigationBar: TabBar(
           tabs: <Widget>[
             Tab(

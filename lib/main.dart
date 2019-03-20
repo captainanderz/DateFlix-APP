@@ -15,7 +15,6 @@ import './pages/matches.dart';
 
 import './scoped_models/main.dart';
 
-
 // 2.1
 void main() {
   runApp(Dateflix());
@@ -31,8 +30,8 @@ class Dateflix extends StatefulWidget {
 
 // 2.3
 class _DateflixState extends State<Dateflix> {
-  final MainModel model = MainModel();                    // Intanciate MainModel
-  bool _isAuthenticated = false;                          // Assumes user is the authenticated at startup
+  final MainModel model = MainModel(); // Intanciate MainModel
+  bool _isAuthenticated = false; // Assumes user is the authenticated at startup
 
 // 2.3.1
   @override
@@ -40,7 +39,7 @@ class _DateflixState extends State<Dateflix> {
     model.autoAuthenticate();
     model.userSubject.listen((bool isAuthenticated) {
       setState(() {
-       _isAuthenticated = isAuthenticated;
+        _isAuthenticated = isAuthenticated;
       });
     });
     super.initState();
@@ -65,17 +64,26 @@ class _DateflixState extends State<Dateflix> {
           ),
           // All routes go here, for simplicity.
           routes: {
-            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(model),
+            '/': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : LoggedInPage(model),
             '/auth': (BuildContext context) => AuthPage(),
-            '/loggedIn': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(model),
+            '/loggedIn': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : LoggedInPage(model),
             '/createUser': (BuildContext context) => CreateUserPage(),
-            '/listUsers': (BuildContext context) => !_isAuthenticated ? FrontPage() : ListUsersPage(model),
-            '/home':(BuildContext context) => !_isAuthenticated ? FrontPage() : HomePage,
-            '/chat':(BuildContext context) => !_isAuthenticated ? FrontPage() : Chat(model),
-            '/account':(BuildContext context) => !_isAuthenticated ? FrontPage() : Profile,
-            '/acc_setting':(BuildContext context) => !_isAuthenticated ? FrontPage() : Acc_Setting,
-            '/edit_profil':(BuildContext context) => !_isAuthenticated ? FrontPage() : Edit_Profil,
-            '/matches': (BuildContext context) => !_isAuthenticated ? FrontPage() : MatchesListPage(model)
+            '/listUsers': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : ListUsersPage(model),
+            '/home': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : HomePage,
+            '/chat': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : Chat(model),
+            '/account': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : Profile,
+            '/acc_setting': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : AccSettings(),
+            '/edit_profil': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : EditProfile(),
+            '/matches': (BuildContext context) =>
+                !_isAuthenticated ? FrontPage() : MatchesListPage(model)
           },
         ),
       ),

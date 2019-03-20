@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Edit_Profil extends StatefulWidget {
+class EditProfile extends StatefulWidget {
   @override
-  _Edit_ProfilState createState() => new _Edit_ProfilState();
+  _EditProfileState createState() => new _EditProfileState();
 }
 
-class _Edit_ProfilState extends State<Edit_Profil>
+class _EditProfileState extends State<EditProfile>
     with TickerProviderStateMixin {
   Future<File> _imageFile;
   DataListBuilder dataListBuilder = new DataListBuilder();

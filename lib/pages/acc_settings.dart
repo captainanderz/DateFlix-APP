@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
 
-class Acc_Setting extends StatefulWidget {
+class AccSettings extends StatefulWidget {
   @override
-  _Acc_SeetingsState createState() => new _Acc_SeetingsState();
+  _AccSeetingsState createState() => new _AccSeetingsState();
 }
 
-class _Acc_SeetingsState extends State<Acc_Setting>
+class _AccSeetingsState extends State<AccSettings>
     with TickerProviderStateMixin {
   bool man = false;
   bool woman = true;
