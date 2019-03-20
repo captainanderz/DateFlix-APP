@@ -52,6 +52,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         },
                       );
                     }),
+                    RaisedButton(
+                  child: Text('Se matches'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/matches');
+                  },
+                )
               ],
             )),
       ),

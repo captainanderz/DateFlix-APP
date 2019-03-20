@@ -44,9 +44,11 @@ class MatchPage extends StatelessWidget {
               )
             ],
           ),
-        FlatButton(child: Text('Nice!'), onPressed: () => {Navigator.pop(
-          context
-        )},)],
+          FlatButton(
+            child: Text('Nice!'),
+            onPressed: () => {Navigator.pop(context)},
+          )
+        ],
       ),
     );
   }

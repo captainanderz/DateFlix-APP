@@ -13,6 +13,7 @@ import '../utilities/bday.dart';
 
 mixin ConnectedModels on Model {
   List<User> _users = [];
+  List<User> _matches = [];
   bool isLoading = false;
   LocalUser _authenticatedUser;
 
@@ -128,6 +129,10 @@ mixin UsersModel on ConnectedModels {
     return List.from(_users);
   }
 
+  List<User> get matches {
+    return List.from(_matches);
+  }
+
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
     isLoading = true;
     notifyListeners();
@@ -197,6 +202,49 @@ mixin UsersModel on ConnectedModels {
         fetchedUsers.add(user);
       });
       _users = fetchedUsers;
+      isLoading = false;
+      notifyListeners();
+    }).catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return;
+    });
+  }
+
+  Future<Null> fetchMatches() {
+    isLoading = true;
+    String id =_authenticatedUser.userId.toString();
+    notifyListeners();
+    return http
+        .get('http://dateflix.captainanderz.com/api/date/matches?userid=' + id,
+            headers: header)
+        .then<Null>((http.Response response) {
+      final List<User> fetchedMatches = [];
+      print('STILL ENCODEDED: ' + response.body);
+      print('DECODED: ');
+      print(json.decode(response.body));
+      final List<dynamic> userListData = json.decode(response.body);
+      print('NEW TEST: ');
+      print(userListData[0]);
+      if (userListData == null) {
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+      userListData.forEach((dynamic userData) {
+        print(userData);
+        final User user = User(
+            userId: userData['id'],
+            firstName: userData['firstName'],
+            birthday: DateTime.parse(userData['birthday']),
+            gender: userData[9],
+            picture: userData[7],
+            hasPicture: false,
+            city: userData[8],
+            description: userData[10]);
+        fetchedMatches.add(user);
+      });
+      _matches = fetchedMatches;
       isLoading = false;
       notifyListeners();
     }).catchError((error) {

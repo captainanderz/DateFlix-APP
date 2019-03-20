@@ -88,7 +88,7 @@ class UserCard extends StatelessWidget {
                 )
               : Image.asset('assets/images/noPic.png'),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Text(user.firstName),
+            Text(user.firstName == null ? 'FEJL' : user.firstName),
             genToText(user),
             Text(
               age,

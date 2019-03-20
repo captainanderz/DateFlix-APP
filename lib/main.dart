@@ -11,6 +11,7 @@ import './pages/auth.dart';
 import './pages/logged_in.dart';
 import './pages/create_user.dart';
 import './pages/list_users.dart';
+import './pages/matches.dart';
 
 import './scoped_models/main.dart';
 
@@ -64,16 +65,17 @@ class _DateflixState extends State<Dateflix> {
           ),
           // All routes go here, for simplicity.
           routes: {
-            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(),
+            '/': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(model),
             '/auth': (BuildContext context) => AuthPage(),
-            '/loggedIn': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(),
+            '/loggedIn': (BuildContext context) => !_isAuthenticated ? FrontPage() : LoggedInPage(model),
             '/createUser': (BuildContext context) => CreateUserPage(),
             '/listUsers': (BuildContext context) => !_isAuthenticated ? FrontPage() : ListUsersPage(model),
             '/home':(BuildContext context) => !_isAuthenticated ? FrontPage() : HomePage,
-            '/chat':(BuildContext context) => !_isAuthenticated ? FrontPage() : Chat,
+            '/chat':(BuildContext context) => !_isAuthenticated ? FrontPage() : Chat(model),
             '/account':(BuildContext context) => !_isAuthenticated ? FrontPage() : Profile,
             '/acc_setting':(BuildContext context) => !_isAuthenticated ? FrontPage() : Acc_Setting,
             '/edit_profil':(BuildContext context) => !_isAuthenticated ? FrontPage() : Edit_Profil,
+            '/matches': (BuildContext context) => !_isAuthenticated ? FrontPage() : MatchesListPage(model)
           },
         ),
       ),
