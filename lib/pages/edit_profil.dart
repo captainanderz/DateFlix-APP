@@ -2,17 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+//3.6.1
 class EditProfile extends StatefulWidget {
   @override
   _EditProfileState createState() => new _EditProfileState();
 }
-
+//3.6.2
 class _EditProfileState extends State<EditProfile>
     with TickerProviderStateMixin {
   Future<File> _imageFile;
   DataListBuilder dataListBuilder = new DataListBuilder();
 
+//3.6.2.1
   getImage(int index) {
     List<GridImage> list = dataListBuilder.gridData;
     if (list[index].imageFile != null) {
@@ -33,7 +34,7 @@ class _EditProfileState extends State<EditProfile>
       });
     }
   }
-
+//3.6.2.2
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery
@@ -182,6 +183,7 @@ class _EditProfileState extends State<EditProfile>
   }
 }
 
+//3.6.3
 class GridImage {
   Future<File> imageFile;
 
@@ -189,7 +191,7 @@ class GridImage {
     this.imageFile,
   });
 }
-
+//3.6.4
 class DataListBuilder {
   List<GridImage> gridData = new List<GridImage>();
 
@@ -214,7 +216,7 @@ class DataListBuilder {
   GridImage row7 = new GridImage(
     imageFile: null,
   );
-
+//3.6.4.1
   DataListBuilder() {
     gridData.add(row1);
     gridData.add(row2);
@@ -225,7 +227,7 @@ class DataListBuilder {
     gridData.add(row7);
   }
 }
-
+//3.6.5
 class ProfileImage extends StatelessWidget {
   final double margin;
   final double width;
@@ -240,7 +242,7 @@ class ProfileImage extends StatelessWidget {
     this.height,
     this.numtext,
     this.iconOnClick});
-
+//3.6.5.1
   @override
   Widget build(BuildContext context) {
     return new Stack(
@@ -293,14 +295,14 @@ class ProfileImage extends StatelessWidget {
     );
   }
 }
-
+//3.6.6
 class ProfileInputs extends StatelessWidget {
   String placeholder;
   int lines;
   String title;
 
   ProfileInputs({this.lines, this.placeholder, this.title});
-
+//3.6.6.1
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery

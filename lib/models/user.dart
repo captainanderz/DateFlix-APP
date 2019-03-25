@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+//4.2.1
 class User {
   final int userId;
   final String firstName;
@@ -9,7 +9,7 @@ class User {
   final List<String> picture;
   final bool hasPicture;
   final String city;
-
+//4.2.1.2
   User(
       {@required this.userId,
       @required this.firstName,

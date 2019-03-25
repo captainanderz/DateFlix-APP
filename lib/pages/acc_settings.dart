@@ -1,25 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
-
+//3.2.1
 class AccSettings extends StatefulWidget {
   @override
   _AccSeetingsState createState() => new _AccSeetingsState();
 }
-
+//3.2.2
 class _AccSeetingsState extends State<AccSettings>
     with TickerProviderStateMixin {
   bool man = false;
   bool woman = true;
   bool other = false;
   List<RangeSliderData> rangeSliders;
-
+//3.2.2.1
   @override
   void initState() {
     super.initState();
     rangeSliders = _rangeSliderDefinitions();
   }
-
+//3.2.2.2
   List<Widget> _buildRangeSliders() {
     List<Widget> children = <Widget>[];
     for (int index = 0; index < rangeSliders.length; index++) {
@@ -36,7 +36,7 @@ class _AccSeetingsState extends State<AccSettings>
 
     return children;
   }
-
+//3.2.2.3
   List<RangeSliderData> _rangeSliderDefinitions() {
     return <RangeSliderData>[
       RangeSliderData(
@@ -50,7 +50,7 @@ class _AccSeetingsState extends State<AccSettings>
           valueIndicatorColor: Color.fromRGBO(220, 28, 29, 1)),
     ];
   }
-
+//3.2.2.4
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -194,7 +194,7 @@ class _AccSeetingsState extends State<AccSettings>
         ));
   }
 }
-
+//3.2.3
 class RangeSliderData {
   double min;
   double max;
@@ -217,7 +217,7 @@ class RangeSliderData {
   static const Color defaultThumbColor = null;
   static const Color defaultValueIndicatorColor = null;
   static const Color defaultOverlayColor = null;
-
+//3.2.3.1
   RangeSliderData({
     this.min,
     this.max,
@@ -240,7 +240,7 @@ class RangeSliderData {
 
   String get upperValueText =>
       upperValue.round().toStringAsFixed(valueIndicatorMaxDecimals);
-
+//3.2.3.2
   Widget build(BuildContext context, RangeSliderCallback callback) {
     Size screenSize = MediaQuery.of(context).size;
     return new Card(

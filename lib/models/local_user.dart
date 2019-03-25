@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+//4.1.1
 class LocalUser {
   final int userId;
   final String firstName;
@@ -12,7 +12,7 @@ class LocalUser {
   final bool hasPicture;
   final String city;
   final String token;
-
+//4.1.2
   LocalUser(
       {@required this.userId,
       this.firstName,

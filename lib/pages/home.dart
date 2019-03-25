@@ -6,11 +6,12 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
 
+//3.8.1
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => new _HomePageState();
 }
-
+//3.8.2
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
@@ -23,12 +24,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     return listStack;
   }
-
+//3.8.2.1
   @override
   void initState() {
     super.initState();
   }
-
+//3.8.2.2
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;

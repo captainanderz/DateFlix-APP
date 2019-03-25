@@ -4,10 +4,10 @@ import './home.dart';
 import './account.dart';
 import './chat.dart';
 import '../scoped_models/main.dart';
-
+//3.10.1
 class LoggedInPage extends StatelessWidget {
   final MainModel model;
-
+//3.10.1.1
   LoggedInPage(this.model);
   @override
   Widget build(BuildContext context) {

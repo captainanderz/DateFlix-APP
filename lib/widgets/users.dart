@@ -29,5 +29,4 @@ class Users extends StatelessWidget {
       return _buildUserList(model.users);
     },);
   }
-
 }
