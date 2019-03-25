@@ -1,13 +1,11 @@
-import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../models/user.dart';
-import '../models/local_user.dart';
-import '../utilities/bday.dart';
 import '../scoped_models/main.dart';
-import '../pages/match.dart';
+import '../utilities/bday.dart';
 
+//7.1.1
 class UserCard extends StatelessWidget {
   final User user;
   final int userIndex;
@@ -22,7 +20,7 @@ class UserCard extends StatelessWidget {
     }
     return Text('Andet');
   }
-
+//7.1.1.1
   Widget _buildActionButtons(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
@@ -43,7 +41,7 @@ class UserCard extends StatelessWidget {
             icon: Icon(Icons.check_circle),
             color: Colors.green,
             onPressed: () {
-            model.likeProfile(model.user.userId, user.userId);
+              model.likeProfile(model.user.userId, user.userId);
             },
           )
         ],
@@ -70,6 +68,8 @@ class UserCard extends StatelessWidget {
 //                 );
 //               }
 
+
+  //7.1.1.2
   @override
   Widget build(BuildContext context) {
     String age = bdayToAge(user.birthday) >= 18

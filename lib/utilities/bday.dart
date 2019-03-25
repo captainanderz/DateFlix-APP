@@ -1,5 +1,5 @@
 
-
+//6.2.1
 int bdayToAge(DateTime bday) {
   int age = 0;
   var now = new DateTime.now();
@@ -11,7 +11,7 @@ int bdayToAge(DateTime bday) {
   }
   return age;
 }
-
+//6.2.2
 DateTime stringToDateTime(String bdayString) {
   print('year: ' + bdayString.substring(0,4));
   print('month: ' + bdayString.substring(5,7));

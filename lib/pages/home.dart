@@ -1,3 +1,5 @@
+import 'package:dateflix/models/user.dart';
+import 'package:dateflix/widgets/user_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:scoped_model/scoped_model.dart';
@@ -12,10 +14,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
+  List<UserCard> _buildUserCardList(List<User> users) {
+    int index = 0;
+    List<UserCard> listStack = [];
+    users.forEach((user) {
+      listStack.add(UserCard(users[index], index));
+      index++;
+    });
+    return listStack;
+  }
 
-
-
-
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

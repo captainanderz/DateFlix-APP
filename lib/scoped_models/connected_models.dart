@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +10,7 @@ import '../models/user.dart';
 import '../models/local_user.dart';
 import '../utilities/bday.dart';
 
+//5.1.1
 mixin ConnectedModels on Model {
   List<User> _users = [];
   List<User> _matches = [];
@@ -23,6 +23,7 @@ mixin ConnectedModels on Model {
   };
 }
 
+//5.1.2
 mixin LocalUserModel on ConnectedModels {
   Timer _authTimer;
   PublishSubject<bool> _userSubject = PublishSubject();
@@ -35,6 +36,7 @@ mixin LocalUserModel on ConnectedModels {
     return _authenticatedUser;
   }
 
+  //5.1.2.1
   Future<Map<String, dynamic>> authenticate(
       String email, String password) async {
     isLoading = true;
@@ -85,6 +87,7 @@ mixin LocalUserModel on ConnectedModels {
     return {'success': !hasError, 'message': message};
   }
 
+  //5.1.2.2
   void autoAuthenticate() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString('token');
@@ -109,6 +112,7 @@ mixin LocalUserModel on ConnectedModels {
     }
   }
 
+  //5.1.2.3
   void logout() async {
     _authenticatedUser = null;
     _authTimer.toString();
@@ -119,11 +123,13 @@ mixin LocalUserModel on ConnectedModels {
     prefs.remove('email');
   }
 
+  //5.1.2.4
   void setAuthTimeout(int time) {
     _authTimer = Timer(Duration(seconds: time), logout);
   }
 }
 
+//5.1.3
 mixin UsersModel on ConnectedModels {
   List<User> get users {
     return List.from(_users);
@@ -133,6 +139,7 @@ mixin UsersModel on ConnectedModels {
     return List.from(_matches);
   }
 
+  //5.1.3.1
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
     isLoading = true;
     notifyListeners();
@@ -168,6 +175,7 @@ mixin UsersModel on ConnectedModels {
     return {'success': success, 'title': title, 'message': message};
   }
 
+  //5.1.3.2
   Future<Null> fetchUsers() {
     isLoading = true;
 
@@ -211,6 +219,7 @@ mixin UsersModel on ConnectedModels {
     });
   }
 
+  //5.1.3.3
   Future<Null> fetchMatches() {
     isLoading = true;
     String id =_authenticatedUser.userId.toString();
@@ -254,6 +263,7 @@ mixin UsersModel on ConnectedModels {
     });
   }
 
+  //5.1.3.4
   Future<bool> likeProfile(int userId, int likedId) async {
     isLoading = true;
     notifyListeners();
