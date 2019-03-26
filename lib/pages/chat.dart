@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
-
+//3.4.1
 class Chat extends StatefulWidget {
 final MainModel model;
 
 Chat(this.model);
-
+//3.4.1.1
   @override
   _ChatState createState() => new _ChatState();
 }
-
+//3.4.2
 class _ChatState extends State<Chat> {
   TabController controller;
-
+//3.4.2.1
   void initState() {
     widget.model.fetchMatches();
     super.initState();
   }
-
+//3.4.2.2
   Widget _buildBody(BuildContext context) {
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
@@ -69,7 +69,7 @@ class _ChatState extends State<Chat> {
       },
     );
   }
-
+//3.4.2.3
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
