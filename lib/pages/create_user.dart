@@ -7,7 +7,6 @@ import '../utilities/bday.dart';
 import '../scoped_models/main.dart';
 import '../utilities/alert.dart';
 
-
 // 3.2.1
 class CreateUserPage extends StatefulWidget {
   @override
@@ -27,10 +26,10 @@ class _CreateUserState extends State<CreateUserPage> {
     'year': null,
     'month': null,
     'day': null,
-    //'image': 'assets/images/NoPicMale.png',
-    //'gender': 4,
-    //'bio': '',
-    //'city': null,
+    'image': 'assets/images/NoPicMale.png',
+    'gender': 4,
+    'bio': '',
+    'city': null,
     'roles': null
   };
 
@@ -96,7 +95,7 @@ class _CreateUserState extends State<CreateUserPage> {
       },
     );
   }
-  
+
   // 3.2.2.4
   Widget _buildPasswordConfirmTextField() {
     return TextFormField(
@@ -143,32 +142,47 @@ class _CreateUserState extends State<CreateUserPage> {
   // No more TextFields to create. Other widgets and functions follows
 
 // 3.2.2.7
-// Dropdown to insert gender
-  Widget _buildGenderDropdownField() {
-    final Map<String, int> _genders = {'Mand': 0, 'Kvinde': 1, 'Andet': 2};
-    String dropdownValue = '';
-    return DropdownButtonFormField<String>(
-      value: dropdownValue,
-      // validator: (String value) {
-      //   if (!_genders.containsValue(value)) {
-      //     return 'Der er ikke valgt et køn';
-      //   }
-      // },
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: <String>['', 'Mand', 'Kvinde', 'Andet']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onSaved: (String value) {
-        _formData['gender'] = _genders[value];
-      },
+// Radio buttons to selec gender
+  Widget _buildGenderRadioGroup() {
+    return GridView(
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      shrinkWrap: true,
+      children: <Widget>[
+        RadioListTile<int>(
+          activeColor: Color.fromRGBO(220, 28, 39, 1),
+          title: Text('Mand'),
+          value: 0,
+          groupValue: _formData['gender'],
+          onChanged: (int value) {
+            setState(() {
+              _formData['gender'] = value;
+            });
+          },
+        ),
+        RadioListTile<int>(
+          activeColor: Color.fromRGBO(220, 28, 39, 1),
+          title: Text('Kvinde'),
+          value: 1,
+          groupValue: _formData['gender'],
+          onChanged: (int value) {
+            setState(() {
+              _formData['gender'] = value;
+            });
+          },
+        ),
+        RadioListTile<int>(
+          activeColor: Color.fromRGBO(220, 28, 39, 1),
+          title: Text('Andet'),
+          value: 2,
+          groupValue: _formData['gender'],
+          onChanged: (int value) {
+            setState(() {
+              _formData['gender'] = value;
+            });
+          },
+        )
+      ],
     );
   }
 
@@ -235,6 +249,19 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
+  Widget _buildBdayGrid() {
+    return GridView(
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      shrinkWrap: true,
+      children: <Widget>[
+        _buildDayField(),
+        _buildMonthField(),
+        _buildYearField()
+      ],
+    );
+  }
+
   // 3.2.2.12
   bool validDate(String year, String month, String day) {
     DateTime bday = DateTime(int.parse(year), int.parse(month), int.parse(day));
@@ -246,7 +273,7 @@ class _CreateUserState extends State<CreateUserPage> {
 
   // 3.2.2.13
   // Function to submit data.
-  void _submitForm(Function createUser) async {
+  void _submitForm(Function createUser, Function authenticate) async {
     if (!_formKey.currentState.validate()) {
       // .validate runs through all validators
       print('NOT VALID');
@@ -268,6 +295,14 @@ class _CreateUserState extends State<CreateUserPage> {
           return AlertText(responseInfo['title'].toString(),
               responseInfo['message'].toString());
         });
+    if (responseInfo['title'].toString() == 'Success!') {
+      Map<String, dynamic> loginInfo =
+          await authenticate(_formData['email'], _formData['password']);
+      if (loginInfo['success']) {
+        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, '/acc_settings_first');
+      }
+    }
   }
 
   // 3.2.2.14
@@ -284,7 +319,8 @@ class _CreateUserState extends State<CreateUserPage> {
                   style: TextStyle(
                       fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
                 ),
-                onPressed: () => _submitForm(model.createUser),
+                onPressed: () =>
+                    _submitForm(model.createUser, model.authenticate),
               );
       },
     );
@@ -304,10 +340,8 @@ class _CreateUserState extends State<CreateUserPage> {
               _buildEmailTextField(),
               _buildPasswordTextField(),
               _buildPasswordConfirmTextField(),
-              _buildDayField(),
-              _buildMonthField(),
-              _buildYearField(),
-              _buildGenderDropdownField(),
+              _buildBdayGrid(),
+              _buildGenderRadioGroup(),
               _buildBioTextField(),
               _buildCityTextField(),
               _submitButton(),

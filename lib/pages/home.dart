@@ -10,19 +10,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(
       appBar: new AppBar(
+        brightness: Brightness.dark,
         elevation: 1.0,
         backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(

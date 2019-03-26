@@ -25,30 +25,49 @@ class UserCard extends StatelessWidget {
 
   Widget _buildActionButtons(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
-      return ButtonBar(
-        alignment: MainAxisAlignment.center,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.cancel),
-            color: Colors.red,
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.help),
-            color: Colors.orangeAccent,
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.check_circle),
-            color: Colors.green,
-            onPressed: () {
-            model.likeProfile(model.user.userId, user.userId);
-            },
-          )
-        ],
-      );
-    });
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return ButtonBar(
+          alignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.cancel),
+              color: Colors.red,
+              onPressed: () {
+                model.users.removeAt(userIndex);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.help),
+              color: Colors.orangeAccent,
+              onPressed: () {},
+            ),
+            IconButton(
+                icon: Icon(Icons.check_circle),
+                color: Colors.green,
+                onPressed: () async {
+                  bool matched =
+                      await model.likeProfile(model.user.userId, user.userId);
+                  if (matched) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          AlertDialog(
+                            title: Text('Det er et match!'),
+                            content: Text('Det er et match'),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('Nice'),
+                                onPressed: () => Navigator.of(context).pop(),
+                              )
+                            ],
+                          );
+                        model.users.removeAt(userIndex);});
+                  }
+                })
+          ],
+        );
+      },
+    );
   }
 
 // if ((await model.likeProfile(model.user.userId, user.userId)) ==

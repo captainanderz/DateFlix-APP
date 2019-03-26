@@ -78,9 +78,13 @@ class _DateflixState extends State<Dateflix> {
                 !_isAuthenticated ? FrontPage() : Chat(model),
             '/account': (BuildContext context) =>
                 !_isAuthenticated ? FrontPage() : Profile,
-            '/acc_setting': (BuildContext context) =>
-                !_isAuthenticated ? FrontPage() : AccSettings(),
-            '/edit_profil': (BuildContext context) =>
+            '/acc_settings': (BuildContext context) => !_isAuthenticated
+                ? FrontPage()
+                : AccSettings(model, model.user, false),
+            '/acc_settings_first': (BuildContext context) => !_isAuthenticated
+                ? FrontPage()
+                : AccSettings(model, model.user, true),
+            '/edit_profile': (BuildContext context) =>
                 !_isAuthenticated ? FrontPage() : EditProfile(),
             '/matches': (BuildContext context) =>
                 !_isAuthenticated ? FrontPage() : MatchesListPage(model)

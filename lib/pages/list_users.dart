@@ -23,19 +23,29 @@ class _UserListStage extends State<ListUsersPage> {
     super.initState();
   }
 
+
+
   Widget _buildUserList() {
     return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        Widget content = Center(
-          child: Text('Ingen brugere fundet FRA LIST_USERS.DART'),
-        );
-        if (model.users.length >= 0 && !model.isLoading) {
-          content = Users();
-        } else if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
-        } return RefreshIndicator(onRefresh: model.fetchUsers, child: content,);
+        builder: (BuildContext context, Widget child, MainModel model) {
+          if(model.newMatch)
+          {
+            //showDialog();
+          }
+
+      Widget content = Center(
+        child: Text('Ingen brugere fundet FRA LIST_USERS.DART'),
+      );
+      if (model.users.length >= 0 && !model.isLoading) {
+        content = Users();
+      } else if (model.isLoading) {
+        content = Center(child: CircularProgressIndicator());
       }
-    );
+      return RefreshIndicator(
+        onRefresh: model.fetchUsers,
+        child: content,
+      );
+    });
   }
 
   @override

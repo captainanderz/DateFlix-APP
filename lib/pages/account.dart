@@ -17,6 +17,7 @@ class _ProfileState extends State<Profile> {
     Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(
       appBar: new AppBar(
+        brightness: Brightness.dark,
         elevation: 1.0,
         backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(
@@ -62,8 +63,7 @@ class _ProfileState extends State<Profile> {
             ),
             new FlatButton(
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/acc_settings');
+                Navigator.pushNamed(context, '/acc_settings');
               },
               child: new Container(
                   width: 200.0,
@@ -94,8 +94,7 @@ class _ProfileState extends State<Profile> {
             ),
             new FlatButton(
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/edit_profil');
+                Navigator.pushNamed(context, '/edit_profile');
               },
               child: new Container(
                   width: 200.0,

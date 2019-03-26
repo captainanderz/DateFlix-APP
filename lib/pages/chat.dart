@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
+import './private_chat.dart';
 
 class Chat extends StatefulWidget {
-final MainModel model;
+  final MainModel model;
 
-Chat(this.model);
+  Chat(this.model);
 
   @override
   _ChatState createState() => new _ChatState();
@@ -27,19 +28,19 @@ class _ChatState extends State<Chat> {
           return Center(
             child: CircularProgressIndicator(),
           );
-         } else if (!model.isLoading && model.matches.length < 1) {
-           return new Padding(
-             padding: const EdgeInsets.all(12.0),
-             child: new Text(
-               "Der er ingen matches endnu",
-               style: new TextStyle(
-                   color: Colors.white70,
-                   fontFamily: "Bebas",
-                   fontSize: 15.0,
-                   fontWeight: FontWeight.w100,
-                   letterSpacing: 1.0),
-             ),
-           );
+        } else if (!model.isLoading && model.matches.length < 1) {
+          return new Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: new Text(
+              "Der er ingen matches endnu",
+              style: new TextStyle(
+                  color: Colors.white70,
+                  fontFamily: "Bebas",
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w100,
+                  letterSpacing: 1.0),
+            ),
+          );
         } else {
           return ListView.builder(
             itemBuilder: (BuildContext context, int index) {
@@ -47,6 +48,16 @@ class _ChatState extends State<Chat> {
                 child: Column(
                   children: <Widget>[
                     ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return PrivateChat(
+                                  model, model.matches[index]);
+                            },
+                          ),
+                        );
+                      },
                       leading: CircleAvatar(
                         backgroundImage: model.matches[index].hasPicture
                             ? NetworkImage(model.matches[index].picture[0])
@@ -76,6 +87,7 @@ class _ChatState extends State<Chat> {
     return new Scaffold(
       appBar: new AppBar(
         elevation: 1.0,
+        brightness: Brightness.dark,
         backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(
           "Matches",
