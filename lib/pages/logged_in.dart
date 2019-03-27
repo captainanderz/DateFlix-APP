@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './home.dart';
+import './list_users.dart';
 import './account.dart';
 import './chat.dart';
 import '../scoped_models/main.dart';
@@ -28,7 +29,7 @@ class LoggedInPage extends StatelessWidget {
           ],
         ),
         body: TabBarView(
-          children: <Widget>[HomePage(), Chat(model), Profile()],
+          children: <Widget>[ListUsersPage(model), Chat(model), Profile()],
         ),
       ),
     );
