@@ -7,7 +7,7 @@ import '../utilities/bday.dart';
 import '../scoped_models/main.dart';
 import '../utilities/alert.dart';
 
-// 3.2.1
+// 3.5.1
 class CreateUserPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,7 +15,7 @@ class CreateUserPage extends StatefulWidget {
   }
 }
 
-// 3.2.2
+// 3.5.2
 class _CreateUserState extends State<CreateUserPage> {
   // Used to save data from submitform
   final Map<String, dynamic> _formData = {
@@ -33,11 +33,12 @@ class _CreateUserState extends State<CreateUserPage> {
     'roles': null
   };
 
-  // Key used to point out whic form is being used
+  // Key used to point out which form is being used
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // TextEditingController used confirm password
   final TextEditingController _passwordController = TextEditingController();
 
-  // 3.2.2.1
+  // 3.5.2.1
   // Building widgets for the different TextFormFields
   // builds field for Name
   Widget _buildNameTextField() {
@@ -55,7 +56,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  // 3.2.2.2
+  // 3.5.2.2
   // Builds field for Email
   // Uses regular expression to check if it is a valid email
   Widget _buildEmailTextField() {
@@ -77,7 +78,7 @@ class _CreateUserState extends State<CreateUserPage> {
         });
   }
 
-  // 3.2.2.3
+  // 3.5.2.3
   // Bields field for Password
   Widget _buildPasswordTextField() {
     return TextFormField(
@@ -113,7 +114,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  // 3.2.2.5
+  // 3.5.2.5
   // Builds field for Bio (or description, Bio is just shorter)
   Widget _buildBioTextField() {
     return TextFormField(
@@ -125,7 +126,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  // 3.2.2.6
+  // 3.5.2.6
   // Builds field for City
   Widget _buildCityTextField() {
     return TextFormField(
@@ -139,7 +140,23 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  // No more TextFields to create. Other widgets and functions follows
+// No more TextFields to create. Other widgets and functions follows
+
+// 3.5.2.7
+Widget _buildRadioButton(int value, String title)
+{
+  return RadioListTile<int>(
+          activeColor: Color.fromRGBO(220, 28, 39, 1),
+          title: Text(title),
+          value: value,
+          groupValue: _formData['gender'],
+          onChanged: (int value) {
+            setState(() {
+              _formData['gender'] = value;
+            });
+          },
+        );
+}
 
 // 3.2.2.7
 // Radio buttons to selec gender
@@ -149,39 +166,9 @@ class _CreateUserState extends State<CreateUserPage> {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       shrinkWrap: true,
       children: <Widget>[
-        RadioListTile<int>(
-          activeColor: Color.fromRGBO(220, 28, 39, 1),
-          title: Text('Mand'),
-          value: 0,
-          groupValue: _formData['gender'],
-          onChanged: (int value) {
-            setState(() {
-              _formData['gender'] = value;
-            });
-          },
-        ),
-        RadioListTile<int>(
-          activeColor: Color.fromRGBO(220, 28, 39, 1),
-          title: Text('Kvinde'),
-          value: 1,
-          groupValue: _formData['gender'],
-          onChanged: (int value) {
-            setState(() {
-              _formData['gender'] = value;
-            });
-          },
-        ),
-        RadioListTile<int>(
-          activeColor: Color.fromRGBO(220, 28, 39, 1),
-          title: Text('Andet'),
-          value: 2,
-          groupValue: _formData['gender'],
-          onChanged: (int value) {
-            setState(() {
-              _formData['gender'] = value;
-            });
-          },
-        )
+        _buildRadioButton(0, 'Mand'),
+        _buildRadioButton(1, 'Kvinde'),
+        _buildRadioButton(2, 'Andet')
       ],
     );
   }
@@ -276,19 +263,10 @@ class _CreateUserState extends State<CreateUserPage> {
   void _submitForm(Function createUser, Function authenticate) async {
     if (!_formKey.currentState.validate()) {
       // .validate runs through all validators
-      print('NOT VALID');
-      print(_formData);
-      print('NOT VALID');
       return;
     }
     _formKey.currentState.save(); // Saves _formData if data is correct
-    print('VALID');
-    print(_formData);
-    print('VALID');
     final Map<String, dynamic> responseInfo = await createUser(_formData);
-    print(responseInfo);
-    print(responseInfo['title']);
-    print(responseInfo['message']);
     showDialog(
         context: context,
         builder: (BuildContext context) {
