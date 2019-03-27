@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class User {
   final int userId;
   final String firstName;
+  final String email;
   final DateTime birthday;
   final int gender;
   final String description;
@@ -13,6 +14,7 @@ class User {
   User(
       {@required this.userId,
       @required this.firstName,
+      @required this.email,
       @required this.birthday,
       @required this.gender,
       this.description,

@@ -13,29 +13,13 @@ class HomePage extends StatefulWidget {
 }
 //3.8.2
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-
-
-  List<UserCard> _buildUserCardList(List<User> users) {
-    int index = 0;
-    List<UserCard> listStack = [];
-    users.forEach((user) {
-      listStack.add(UserCard(users[index], index));
-      index++;
-    });
-    return listStack;
-  }
-//3.8.2.1
-  @override
-  void initState() {
-    super.initState();
-  }
-//3.8.2.2
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(
       appBar: new AppBar(
+        brightness: Brightness.dark,
         elevation: 1.0,
         backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(

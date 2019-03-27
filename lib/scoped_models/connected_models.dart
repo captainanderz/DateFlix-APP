@@ -5,15 +5,20 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:signalr_client/signalr_client.dart';
 
 import '../models/user.dart';
 import '../models/local_user.dart';
+import '../models/message.dart';
 import '../utilities/bday.dart';
 
 //5.1.1
 mixin ConnectedModels on Model {
   List<User> _users = [];
   List<User> _matches = [];
+  List<Message> messages = [];
+  User matched;
+  bool newMatch = false;
   bool isLoading = false;
   LocalUser _authenticatedUser;
 
@@ -58,6 +63,14 @@ mixin LocalUserModel on ConnectedModels {
 
       DateTime bday = stringToDateTime(responseData['birthday']);
 
+      List<int> preferences = [];
+      if (responseData['userPreference'] != null) {
+        preferences = [
+          responseData['userPreference'][0],
+          responseData['userPreference'][1],
+          responseData['userPreference'][2]
+        ];
+      }
       _authenticatedUser = LocalUser(
           userId: responseData['id'],
           firstName: responseData['firstName'],
@@ -66,6 +79,7 @@ mixin LocalUserModel on ConnectedModels {
           description: responseData['description'],
           gender: responseData['gender'],
           hasPicture: false,
+          prefs: preferences,
           city: responseData['city'],
           token: responseData['token']);
       print('LocalUser created');
@@ -125,7 +139,7 @@ mixin LocalUserModel on ConnectedModels {
 
   //5.1.2.4
   void setAuthTimeout(int time) {
-    _authTimer = Timer(Duration(seconds: time), logout);
+    _authTimer = Timer(Duration(minutes: time), logout);
   }
 }
 
@@ -140,6 +154,21 @@ mixin UsersModel on ConnectedModels {
   }
 
   //5.1.3.1
+  Future<Map<String, dynamic>> deleteUser() async {
+    bool success = false;
+    String title = 'Fejl';
+    String message = 'Hovsa... Noget gik galt';
+
+    http.Response response = await http.delete('http://dateflix.captainanderz.com/api/users/' + _authenticatedUser.userId.toString());
+    if(response.statusCode == 200 || response.statusCode == 2001)
+    {
+      success = true;
+      title = 'Bruger slettet';
+      message = 'Vi håber du vender tilbage igen';
+    }
+    return {'success': success, 'title': title, 'message': message};
+  }
+
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
     isLoading = true;
     notifyListeners();
@@ -149,6 +178,7 @@ mixin UsersModel on ConnectedModels {
       'firstName': user['firstname'],
       'lastName': 'TestFromApp',
       'email': user['email'],
+      'gender': user['gender'],
       'password': user['password'],
       'birthday': bday
     };
@@ -175,22 +205,48 @@ mixin UsersModel on ConnectedModels {
     return {'success': success, 'title': title, 'message': message};
   }
 
-  //5.1.3.2
-  Future<Null> fetchUsers() {
+  Future<Map<String, dynamic>> setupUserPreferences(
+      Map<String, dynamic> prefs) async {
     isLoading = true;
-
     notifyListeners();
+
+    bool success = false;
+    String title = 'Fejl';
+    String message = 'Hovsa... Noget gik galt';
+
+    var body = json.encode(prefs);
+
+    http.Response response = await http.post(
+        'http://dateflix.captainanderz.com/api/users/UpdateUserPreference?userid=' +
+            _authenticatedUser.userId.toString(),
+        body: body,
+        headers: header);
+
+    print(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      success = true;
+      title = 'Success!';
+      message = 'Indstillinger sat';
+    }
+    isLoading = false;
+    notifyListeners();
+    return {'success': success, 'title': title, 'message': message};
+  }
+
+  Future<Null> fetchUsers([bool getAll]) {
+    isLoading = true;
+    notifyListeners();
+    String url = 'http://dateflix.captainanderz.com/api/date/GetMatchingUsers?userid=' + _authenticatedUser.userId.toString();
+    if(getAll != null)
+    {
+      url = 'http://dateflix.captainanderz.com/api/users/getall';
+    }
     return http
-        .get('http://dateflix.captainanderz.com/api/users/getall',
+        .get(url,
             headers: header)
         .then<Null>((http.Response response) {
       final List<User> fetchedUsers = [];
-      print('STILL ENCODEDED: ' + response.body);
-      print('DECODED: ');
-      print(json.decode(response.body));
       final List<dynamic> userListData = json.decode(response.body);
-      print('NEW TEST: ');
-      print(userListData[0]);
       if (userListData == null) {
         isLoading = false;
         notifyListeners();
@@ -202,6 +258,7 @@ mixin UsersModel on ConnectedModels {
             userId: userData['id'],
             firstName: userData['firstName'],
             birthday: DateTime.parse(userData['birthday']),
+            email: userData['email'],
             gender: userData[9],
             picture: userData[7],
             hasPicture: false,
@@ -219,33 +276,36 @@ mixin UsersModel on ConnectedModels {
     });
   }
 
-  //5.1.3.3
-  Future<Null> fetchMatches() {
+  String connectionId;
+
+  Future<Null> fetchMatches() async {
     isLoading = true;
-    String id =_authenticatedUser.userId.toString();
+    String id = _authenticatedUser.userId.toString();
     notifyListeners();
+    //await getConnectionId();
     return http
         .get('http://dateflix.captainanderz.com/api/date/matches?userid=' + id,
             headers: header)
         .then<Null>((http.Response response) {
       final List<User> fetchedMatches = [];
-      print('STILL ENCODEDED: ' + response.body);
-      print('DECODED: ');
-      print(json.decode(response.body));
+      //print('STILL ENCODEDED: ' + response.body);
+      //print('DECODED: ');
+      //print(json.decode(response.body));
       final List<dynamic> userListData = json.decode(response.body);
-      print('NEW TEST: ');
-      print(userListData[0]);
+      //print('NEW TEST: ');
+      //print(userListData[0]);
       if (userListData == null) {
         isLoading = false;
         notifyListeners();
         return;
       }
       userListData.forEach((dynamic userData) {
-        print(userData);
+        //print(userData);
         final User user = User(
             userId: userData['id'],
             firstName: userData['firstName'],
             birthday: DateTime.parse(userData['birthday']),
+            email: userData['email'],
             gender: userData[9],
             picture: userData[7],
             hasPicture: false,
@@ -284,5 +344,79 @@ mixin UsersModel on ConnectedModels {
     isLoading = false;
     notifyListeners();
     return false;
+  }
+
+  HubConnection connection;
+
+  void _recieveMessage(List<Object> args) {
+    final String senderName = args[0];
+    final String message = args[1];
+    print(senderName + ': ' + message);
+  }
+
+  Future<Null> startChatConnection() async {
+    if (connection == null) {
+      print('Connection is null. Building new conection');
+      connection = new HubConnectionBuilder()
+          .withUrl('http://dateflix.captainanderz.com/privatechathub?email=' +
+              _authenticatedUser.email)
+          .build();
+      connection.onclose((error) => {print(error)});
+      connection.on("ReceiveMessage", _recieveMessage);
+    }
+    if (connection.state != HubConnectionState.Connected) {
+      print('Connection build, but not connected');
+      await connection.start();
+    }
+  }
+
+  Future<Null> getConnectionId() async {
+    String newId;
+    await startChatConnection().then((t) async {
+      newId = (await connection.invoke("GetConnectionId")).toString();
+      print(newId);
+      connectionId = newId;
+    });
+  }
+
+  buildMessageList(User user) async {
+    isLoading = true;
+    notifyListeners();
+    List<dynamic> messagesData = await getMessages(user);
+
+    if (messagesData != null) {
+      messagesData.forEach((dynamic messageData) {
+        print('Adding messages to list');
+        String name;
+        if (messageData['receiverFirstname'] == user.email) {
+          name = _authenticatedUser.firstName;
+        } else {
+          name = user.firstName;
+        }
+        final Message message =
+            Message(name: name, message: messageData['message']);
+        messages.add(message);
+      });
+      isLoading = false;
+      notifyListeners();
+      print('Single object of messages');
+      print(messages[0]);
+    }
+  }
+
+  getMessages(User user) async {
+    await getConnectionId().then((void message) async {
+      print('Calling GetMessages with ' +
+          _authenticatedUser.email +
+          ', ' +
+          connectionId +
+          ', ' +
+          user.email +
+          ' as parameters');
+
+      List<dynamic> messageData = (await connection.invoke("GetMessages",
+          args: <String>[_authenticatedUser.email, connectionId, user.email]));
+      return messageData;
+    });
   }
 }

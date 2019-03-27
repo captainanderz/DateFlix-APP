@@ -7,26 +7,29 @@ import '../models/user.dart';
 
 //7.2.1
 class Users extends StatelessWidget {
-
   Widget _buildUserList(List<User> users) {
-    Widget userCard;
-    if(users.length > 0) {
-      userCard = ListView.builder(
-        itemBuilder: (BuildContext context,int index) =>
-        UserCard(users[index], index),
+    Widget userCards;
+    if (users.length > 0) {
+      userCards = ListView.builder(
+        itemBuilder: (BuildContext context, int index) =>
+            UserCard(users[index], index),
         itemCount: users.length,
       );
     } else {
-      userCard = Center(child: Text('Ingen brugere fundet FRA USERS.DART'),);
+      userCards = Center(
+        child: Text('Ingen brugere fundet FRA USERS.DART'),
+      );
     }
-    return userCard;
+    return userCards;
   }
 
   //7.2.1.1
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
-      return _buildUserList(model.users);
-    },);
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return _buildUserList(model.users);
+      },
+    );
   }
 }

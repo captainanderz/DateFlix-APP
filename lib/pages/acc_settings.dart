@@ -2,7 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
 //3.2.1
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped_models/main.dart';
+import '../utilities/alert.dart';
+import '../models/local_user.dart';
+
 class AccSettings extends StatefulWidget {
+  final MainModel model;
+  final LocalUser localUser;
+  final bool firstRun;
+
+  AccSettings(this.model, this.localUser, this.firstRun);
   @override
   _AccSeetingsState createState() => new _AccSeetingsState();
 }
@@ -10,14 +21,40 @@ class AccSettings extends StatefulWidget {
 class _AccSeetingsState extends State<AccSettings>
     with TickerProviderStateMixin {
   bool man = false;
-  bool woman = true;
+  bool woman = false;
   bool other = false;
+  double lowerVal = 18;
+  double upperVal = 100;
   List<RangeSliderData> rangeSliders;
 //3.2.2.1
+
+  Map<String, dynamic> prefs = {
+    'MinimumAge': 18,
+    'MaximumAge': 100,
+    'Gender': 1
+  };
+
   @override
   void initState() {
     super.initState();
     rangeSliders = _rangeSliderDefinitions();
+/*     if (widget.localUser.prefs != null) {
+      lowerVal = widget.localUser.prefs[0].roundToDouble();
+      upperVal = widget.localUser.prefs[1].roundToDouble();
+      if (widget.localUser.prefs[2] == 0) {
+        man = true;
+        woman = false;
+        other = false;
+      } else if (widget.localUser.prefs[2] == 2) {
+        man = false;
+        woman = false;
+        other = true;
+      } else {
+        man = false;
+        woman = true;
+        other = false;
+      } */
+    //}
   }
 //3.2.2.2
   List<Widget> _buildRangeSliders() {
@@ -26,6 +63,8 @@ class _AccSeetingsState extends State<AccSettings>
       children
           .add(rangeSliders[index].build(context, (double lower, double upper) {
         setState(() {
+          lowerVal = lower;
+          upperVal = upper;
           rangeSliders[index].lowerValue = lower;
           rangeSliders[index].upperValue = upper;
         });
@@ -51,6 +90,33 @@ class _AccSeetingsState extends State<AccSettings>
     ];
   }
 //3.2.2.4
+
+  Widget confirm() {
+    return AlertDialog(
+        title: Text('Slet konto'),
+        content: Text('Er du sikker på at du vil slette din konto?'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.cancel),
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.check_circle),
+            color: Colors.green,
+            onPressed: () async {
+              Navigator.of(context).pop();
+              Map<String, dynamic> text = await widget.model.deleteUser();
+              if (text['success']) {
+                widget.model.logout();
+              }
+            },
+          )
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -58,6 +124,7 @@ class _AccSeetingsState extends State<AccSettings>
     return new Scaffold(
         appBar: new AppBar(
           elevation: 1.0,
+          brightness: Brightness.dark,
           backgroundColor: Theme.of(context).backgroundColor,
           title: new Text(
             "Indstillinger",
@@ -108,32 +175,50 @@ class _AccSeetingsState extends State<AccSettings>
                               onChanged: (bool newValue) {
                                 setState(() {
                                   man = newValue;
+                                  if (newValue) {
+                                    woman = false;
+                                    other = false;
+                                  }
                                 });
                               },
                               activeColor: Colors.red,
                               activeTrackColor: Colors.red,
                             )),
                         new ListTile(
-                            title: new Text("Kvinder", style: new TextStyle(
-                                color: new Color.fromRGBO(220, 28, 29, 1)),),
+                            title: new Text(
+                              "Kvinder",
+                              style: new TextStyle(
+                                  color: new Color.fromRGBO(220, 28, 29, 1)),
+                            ),
                             trailing: new Switch(
                               value: woman,
                               onChanged: (bool newValue) {
                                 setState(() {
                                   woman = newValue;
+                                  if (newValue) {
+                                    man = false;
+                                    other = false;
+                                  }
                                 });
                               },
                               activeColor: Colors.red,
                               activeTrackColor: Colors.red,
                             )),
                         new ListTile(
-                          title: new Text("Andet",style: new TextStyle(
-                              color: new Color.fromRGBO(220, 28, 29, 1)),),
+                          title: new Text(
+                            "Andet",
+                            style: new TextStyle(
+                                color: new Color.fromRGBO(220, 28, 29, 1)),
+                          ),
                           trailing: new Switch(
                             value: other,
                             onChanged: (bool newValue) {
                               setState(() {
                                 other = newValue;
+                                if (newValue) {
+                                  woman = false;
+                                  man = false;
+                                }
                               });
                             },
                             activeColor: Colors.red,
@@ -144,35 +229,82 @@ class _AccSeetingsState extends State<AccSettings>
                     ),
                   )),
               new Column(children: <Widget>[]..addAll(_buildRangeSliders())),
-              RaisedButton(
-                child: new Container(
-                  width: screenSize.width,
-                  padding: new EdgeInsets.only(top: 5.0, bottom: 5.0),
-                  height: 40.0,
-                  child: new Center(
-                    child: Text(
-                      'Gem',
-                      style: TextStyle(
-                          fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
+              ScopedModelDescendant(
+                builder: (BuildContext context, Widget child, MainModel model) {
+                  return RaisedButton(
+                    child: new Container(
+                      width: screenSize.width,
+                      padding: new EdgeInsets.only(top: 5.0, bottom: 5.0),
+                      height: 40.0,
+                      child: new Center(
+                        child: Text(
+                          'Gem',
+                          style: TextStyle(
+                              fontSize: 28,
+                              color: Color.fromRGBO(220, 28, 39, 1)),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                onPressed: () {},
+                    onPressed: () async {
+                      int gender = 1;
+                      if (man) {
+                        gender = 0;
+                      } else if (other) {
+                        gender = 2;
+                      }
+                      if (!man && !woman && !other) {
+                        if (widget.localUser.gender == 0) {
+                          gender = 1;
+                        } else if (widget.localUser.gender == 1) {
+                          gender = 0;
+                        } else {
+                          gender = 2;
+                        }
+                      }
+                      prefs['MinimumAge'] = lowerVal.round();
+                      prefs['MaximumAge'] = upperVal.round();
+                      prefs['Gender'] = gender;
+                      model.user.prefs = [
+                        lowerVal.round(),
+                        upperVal.round(),
+                        gender
+                      ];
+                      print(prefs);
+                      final Map<String, dynamic> responseInfo =
+                          await model.setupUserPreferences(prefs);
+                      widget.firstRun ? Navigator.pushReplacementNamed(context, '/loggedIn')
+                      : showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertText(responseInfo['title'].toString(),
+                                responseInfo['message'].toString());
+                          });
+                    },
+                  );
+                },
               ),
-              RaisedButton(
-                child: new Container(
-                  width: screenSize.width,
-                  padding: new EdgeInsets.only(top: 5.0, bottom: 5.0),
-                  height: 40.0,
-                  child: new Center(
-                    child: Text(
-                      'Log ud',
-                      style: TextStyle(
-                          fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
+              widget.firstRun ? Container() :
+              ScopedModelDescendant(
+                builder: (BuildContext context, Widget child, MainModel model) {
+                  return RaisedButton(
+                    child: new Container(
+                      width: screenSize.width,
+                      padding: new EdgeInsets.only(top: 5.0, bottom: 5.0),
+                      height: 40.0,
+                      child: new Center(
+                        child: Text(
+                          'Log ud',
+                          style: TextStyle(
+                              fontSize: 28,
+                              color: Color.fromRGBO(220, 28, 39, 1)),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                onPressed: () {},
+                    onPressed: () {
+                      model.logout();
+                    },
+                  );
+                },
               ),
               RaisedButton(
                 child: new Container(
@@ -187,8 +319,12 @@ class _AccSeetingsState extends State<AccSettings>
                     ),
                   ),
                 ),
-                onPressed: () {},
-              ),
+                onPressed: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => confirm());
+                },
+              )
             ],
           ),
         ));
@@ -227,12 +363,12 @@ class RangeSliderData {
     this.showValueIndicator: true,
     this.valueIndicatorMaxDecimals: 0,
     this.forceValueIndicator: false,
-    this.overlayColor: defaultOverlayColor,
-    this.activeTrackColor: defaultActiveTrackColor,
-    this.inactiveTrackColor: defaultInactiveTrackColor,
-    this.thumbColor: defaultThumbColor,
-    this.valueIndicatorColor: defaultValueIndicatorColor,
-    this.activeTickMarkColor: defaultActiveTickMarkColor,
+    this.overlayColor: null,
+    this.activeTrackColor: null,
+    this.inactiveTrackColor: null,
+    this.thumbColor: null,
+    this.valueIndicatorColor: null,
+    this.activeTickMarkColor: null,
   });
 
   String get lowerValueText =>
@@ -250,9 +386,16 @@ class RangeSliderData {
             padding: new EdgeInsets.only(top: 12.0, bottom: 12.0),
             child: new Column(children: <Widget>[
               new ListTile(
-                title: new Text("Alder",style: new TextStyle(
-                    color: new Color.fromRGBO(220, 28, 29, 1)),),
-                trailing: new Text((lowerValueText) + "-" + (upperValueText), style: new TextStyle(color: new Color.fromRGBO(220, 28, 29, 1)),),
+                title: new Text(
+                  "Alder",
+                  style:
+                      new TextStyle(color: new Color.fromRGBO(220, 28, 29, 1)),
+                ),
+                trailing: new Text(
+                  (lowerValueText) + "-" + (upperValueText),
+                  style:
+                      new TextStyle(color: new Color.fromRGBO(220, 28, 29, 1)),
+                ),
               ),
               new Container(
                 width: double.infinity,

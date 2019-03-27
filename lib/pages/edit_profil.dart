@@ -13,8 +13,43 @@ class _EditProfileState extends State<EditProfile>
   Future<File> _imageFile;
   DataListBuilder dataListBuilder = new DataListBuilder();
 
-//3.6.2.1
-  getImage(int index) {
+  void _openImagePicker(BuildContext context, int index) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 150,
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Vælg billede fra: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FlatButton(
+                  textColor: Theme.of(context).accentColor,
+                  child: Text('Kamera'),
+                  onPressed: () {
+                    getImage(index, ImageSource.camera);
+                  },
+                ),
+                FlatButton(
+                  textColor: Theme.of(context).accentColor,
+                  child: Text('Galleri'),
+                  onPressed: () {
+                    getImage(index, ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  getImage(int index, ImageSource source) {
     List<GridImage> list = dataListBuilder.gridData;
     if (list[index].imageFile != null) {
       list[index].imageFile = null;
@@ -22,7 +57,7 @@ class _EditProfileState extends State<EditProfile>
         _imageFile = null;
       });
     } else {
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      _imageFile = ImagePicker.pickImage(source: source);
       _imageFile.then((onValue) {
         print(onValue);
         if (onValue != null) {
@@ -37,18 +72,14 @@ class _EditProfileState extends State<EditProfile>
 //3.6.2.2
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    Size screenSize = MediaQuery.of(context).size;
 
     List<GridImage> list = dataListBuilder.gridData;
 
     return new Scaffold(
       appBar: new AppBar(
         elevation: 1.0,
-        backgroundColor: Theme
-            .of(context)
-            .backgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(
           " Ret profil",
           textAlign: TextAlign.center,
@@ -87,7 +118,7 @@ class _EditProfileState extends State<EditProfile>
                   numtext: "1",
                   imageFile: list[0].imageFile,
                   iconOnClick: () {
-                    getImage(0);
+                    _openImagePicker(context,0);
                   },
                 ),
                 new Column(
@@ -99,7 +130,7 @@ class _EditProfileState extends State<EditProfile>
                       numtext: "2",
                       imageFile: list[1].imageFile,
                       iconOnClick: () {
-                        getImage(1);
+                        _openImagePicker(context,1);
                       },
                     ),
                     new ProfileImage(
@@ -109,7 +140,7 @@ class _EditProfileState extends State<EditProfile>
                       numtext: "3",
                       imageFile: list[2].imageFile,
                       iconOnClick: () {
-                        getImage(2);
+                        _openImagePicker(context,2);
                       },
                     ),
                   ],
@@ -126,7 +157,7 @@ class _EditProfileState extends State<EditProfile>
                   numtext: "6",
                   imageFile: list[5].imageFile,
                   iconOnClick: () {
-                    getImage(5);
+                    _openImagePicker(context,5);
                   },
                 ),
                 new ProfileImage(
@@ -136,7 +167,7 @@ class _EditProfileState extends State<EditProfile>
                   numtext: "5",
                   imageFile: list[4].imageFile,
                   iconOnClick: () {
-                    getImage(4);
+                    _openImagePicker(context,4);
                   },
                 ),
                 new ProfileImage(
@@ -146,7 +177,7 @@ class _EditProfileState extends State<EditProfile>
                   numtext: "4",
                   imageFile: list[3].imageFile,
                   iconOnClick: () {
-                    getImage(3);
+                    _openImagePicker(context,3);
                   },
                 ),
               ],
@@ -170,11 +201,11 @@ class _EditProfileState extends State<EditProfile>
                   child: Text(
                     'Gem',
                     style: TextStyle(
-                        fontSize: 28,
-                        color: Color.fromRGBO(220, 28, 39, 1)),
+                        fontSize: 28, color: Color.fromRGBO(220, 28, 39, 1)),
                   ),
                 ),
-              ), onPressed: () {},
+              ),
+              onPressed: () {},
             ),
           ],
         ),
@@ -305,9 +336,7 @@ class ProfileInputs extends StatelessWidget {
 //3.6.6.1
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    Size screenSize = MediaQuery.of(context).size;
 
     return new Container(
       margin: const EdgeInsets.only(top: 10.0),
