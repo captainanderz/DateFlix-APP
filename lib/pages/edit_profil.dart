@@ -96,6 +96,7 @@ class _EditProfileState extends State<EditProfile>
     return new Scaffold(
       appBar: new AppBar(
         elevation: 1.0,
+        brightness: Brightness.dark,
         backgroundColor: Theme.of(context).backgroundColor,
         title: new Text(
           " Ret profil",

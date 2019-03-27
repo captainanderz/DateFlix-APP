@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 //3.7.1
 class FrontPage extends StatelessWidget {
   //3.7.1.1
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
+        .copyWith(statusBarIconBrightness: Brightness.light));
     return Container(
       child: Center(
         child: ListView(
