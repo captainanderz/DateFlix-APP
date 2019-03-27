@@ -98,7 +98,7 @@ class _CreateUserState extends State<CreateUserPage> {
     );
   }
 
-  // 3.2.2.4
+  // 3.5.2.4
   Widget _buildPasswordConfirmTextField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -159,8 +159,8 @@ Widget _buildRadioButton(int value, String title)
         );
 }
 
-// 3.2.2.7
-// Radio buttons to selec gender
+// 3.5.2.8
+// Radio buttons to select gender
   Widget _buildGenderRadioGroup() {
     return GridView(
       gridDelegate:
@@ -174,13 +174,13 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.5.2.8
+  // 3.5.2.9  
   bool ageCheck(String year) {
     DateTime current = DateTime.now();
     return current.year - int.parse(year) >= 18;
   }
 
-  // 3.5.2.9
+  // 3.5.2.10
   Widget _buildYearField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -199,7 +199,7 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.5.2.10
+  // 3.5.2.11
   Widget _buildMonthField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -208,7 +208,7 @@ Widget _buildRadioButton(int value, String title)
         labelStyle: TextStyle(fontSize: 24),
       ),
       validator: (String value) {
-        if (int.parse(value) < 0 || int.parse(value) > 12) {
+        if (int.parse(value) < 1 || int.parse(value) > 12) {
           return 'Månederne går fra 1 til 12';
         }
       },
@@ -218,7 +218,7 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.5.2.11
+  // 3.5.2.12
   Widget _buildDayField() {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -227,7 +227,7 @@ Widget _buildRadioButton(int value, String title)
         labelStyle: TextStyle(fontSize: 24),
       ),
       validator: (String value) {
-        if (int.parse(value) < 0 || int.parse(value) > 31) {
+        if (int.parse(value) < 1 || int.parse(value) > 31) {
           return 'Fejl i dag';
         }
       },
@@ -237,7 +237,7 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.5.2.12
+  // 3.5.2.13
   Widget _buildBdayGrid() {
     return GridView(
       gridDelegate:
@@ -251,7 +251,7 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.2.2.12
+  // 3.2.2.14
   bool validDate(String year, String month, String day) {
     DateTime bday = DateTime(int.parse(year), int.parse(month), int.parse(day));
     if (bdayToAge(bday) >= 18) {
@@ -260,7 +260,7 @@ Widget _buildRadioButton(int value, String title)
     return false;
   }
 
-  // 3.5.2.13
+  // 3.5.2.15
   // Function to submit data.
   void _submitForm(Function createUser, Function authenticate) async {
     if (!_formKey.currentState.validate()) {
@@ -285,7 +285,7 @@ Widget _buildRadioButton(int value, String title)
     }
   }
 
-  // 3.5.2.14
+  // 3.5.2.16
   // Builds the submit button
   Widget _submitButton() {
     return ScopedModelDescendant<MainModel>(
@@ -306,7 +306,7 @@ Widget _buildRadioButton(int value, String title)
     );
   }
 
-  // 3.5.2.15
+  // 3.5.2.1
   @override
   Widget build(BuildContext context) {
     return Material(
