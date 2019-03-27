@@ -49,6 +49,7 @@ class _EditProfileState extends State<EditProfile>
         });
   }
 
+  // 3.6.2.1
   getImage(int index, ImageSource source) {
     List<GridImage> list = dataListBuilder.gridData;
     if (list[index].imageFile != null) {
@@ -69,7 +70,23 @@ class _EditProfileState extends State<EditProfile>
       });
     }
   }
-//3.6.2.2
+
+  // 3.6.2.2
+  Widget _buildProfileImageBox(int index, List<GridImage> list)
+  {
+    return ProfileImage(
+                      margin: 10.0,
+                      width: 90.0,
+                      height: 130.0,
+                      numtext: (index + 1).toString(),
+                      imageFile: list[index].imageFile,
+                      iconOnClick: () {
+                        _openImagePicker(context, index);
+                      },
+                    );
+  }
+
+  //3.6.2.3
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -123,26 +140,8 @@ class _EditProfileState extends State<EditProfile>
                 ),
                 new Column(
                   children: <Widget>[
-                    new ProfileImage(
-                      margin: 10.0,
-                      width: 90.0,
-                      height: 130.0,
-                      numtext: "2",
-                      imageFile: list[1].imageFile,
-                      iconOnClick: () {
-                        _openImagePicker(context,1);
-                      },
-                    ),
-                    new ProfileImage(
-                      margin: 10.0,
-                      width: 90.0,
-                      height: 130.0,
-                      numtext: "3",
-                      imageFile: list[2].imageFile,
-                      iconOnClick: () {
-                        _openImagePicker(context,2);
-                      },
-                    ),
+                    _buildProfileImageBox(1, list),
+                    _buildProfileImageBox(2, list),
                   ],
                 )
               ],
@@ -150,36 +149,9 @@ class _EditProfileState extends State<EditProfile>
             new Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new ProfileImage(
-                  margin: 10.0,
-                  width: 90.0,
-                  height: 130.0,
-                  numtext: "6",
-                  imageFile: list[5].imageFile,
-                  iconOnClick: () {
-                    _openImagePicker(context,5);
-                  },
-                ),
-                new ProfileImage(
-                  margin: 10.0,
-                  width: 90.0,
-                  height: 130.0,
-                  numtext: "5",
-                  imageFile: list[4].imageFile,
-                  iconOnClick: () {
-                    _openImagePicker(context,4);
-                  },
-                ),
-                new ProfileImage(
-                  margin: 10.0,
-                  width: 90.0,
-                  height: 130.0,
-                  numtext: "4",
-                  imageFile: list[3].imageFile,
-                  iconOnClick: () {
-                    _openImagePicker(context,3);
-                  },
-                ),
+                _buildProfileImageBox(3, list),
+                _buildProfileImageBox(4, list),
+                _buildProfileImageBox(5, list),
               ],
             ),
             new ProfileInputs(
