@@ -404,8 +404,8 @@ mixin UsersModel on ConnectedModels {
     }
   }
 
-  getMessages(User user) async {
-    await getConnectionId().then((void message) async {
+Future<List<dynamic>>
+  getMessages(User user) async => await getConnectionId().then((void message) async {
       print('Calling GetMessages with ' +
           _authenticatedUser.email +
           ', ' +
@@ -418,5 +418,4 @@ mixin UsersModel on ConnectedModels {
           args: <String>[_authenticatedUser.email, connectionId, user.email]));
       return messageData;
     });
-  }
 }

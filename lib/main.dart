@@ -11,7 +11,6 @@ import './pages/auth.dart';
 import './pages/logged_in.dart';
 import './pages/create_user.dart';
 import './pages/list_users.dart';
-import './pages/matches.dart';
 
 import './scoped_models/main.dart';
 
@@ -30,8 +29,8 @@ class Dateflix extends StatefulWidget {
 
 // 2.3
 class _DateflixState extends State<Dateflix> {
-  final MainModel model = MainModel(); // Intanciate MainModel
-  bool _isAuthenticated = false; // Assumes user is the authenticated at startup
+  final MainModel model = MainModel();        // Instanciate the MainModel model
+  bool _isAuthenticated = false;              // Assumes user is not authenticated at startup
 
 // 2.3.1
   @override
@@ -85,9 +84,7 @@ class _DateflixState extends State<Dateflix> {
                 ? FrontPage()
                 : AccSettings(model, model.user, true),
             '/edit_profile': (BuildContext context) =>
-                !_isAuthenticated ? FrontPage() : EditProfile(),
-            '/matches': (BuildContext context) =>
-                !_isAuthenticated ? FrontPage() : MatchesListPage(model)
+                !_isAuthenticated ? FrontPage() : EditProfile()
           },
         ),
       ),
