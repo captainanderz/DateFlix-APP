@@ -82,7 +82,7 @@ class _ProfileState extends State<Profile> {
                         color: Color.fromRGBO(220, 28, 29, 1),
                       ),
                       new Text(
-                        "Instillinger",
+                        "Indstillinger",
                         style: new TextStyle(
                             fontSize: 18.0,
                             letterSpacing: 0.6,

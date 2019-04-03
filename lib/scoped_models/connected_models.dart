@@ -18,7 +18,6 @@ mixin ConnectedModels on Model {
   List<User> _matches = [];
   List<Message> messages = [];
   User matched;
-  bool newMatch = false;
   bool isLoading = false;
   LocalUser _authenticatedUser;
 
@@ -47,7 +46,7 @@ mixin LocalUserModel on ConnectedModels {
     isLoading = true;
     notifyListeners();
     bool hasError = true;
-    String message = 'Somthing went wrong';
+    String message = 'Noget gik galt';
 
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/users/authenticate',
@@ -55,11 +54,17 @@ mixin LocalUserModel on ConnectedModels {
         body: json.encode({"email": email, "password": password}));
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
+    print(responseData['message']);
     isLoading = false;
     notifyListeners();
+    if(response.statusCode == 400)
+    {
+      return {'success': !hasError, 'message': message};
+    }
     if (!responseData.containsKey('message')) {
       hasError = false;
       message = 'Login successful';
+      print(responseData);
 
       DateTime bday = stringToDateTime(responseData['birthday']);
 
@@ -70,6 +75,8 @@ mixin LocalUserModel on ConnectedModels {
           responseData['userPreference'][1],
           responseData['userPreference'][2]
         ];
+      } else {
+        message = 'Preferences not set';
       }
       _authenticatedUser = LocalUser(
           userId: responseData['id'],
@@ -233,14 +240,10 @@ mixin UsersModel on ConnectedModels {
     return {'success': success, 'title': title, 'message': message};
   }
 
-  Future<Null> fetchUsers([bool getAll]) {
+  Future<Null> fetchUsers() {
     isLoading = true;
     notifyListeners();
     String url = 'http://dateflix.captainanderz.com/api/date/GetMatchingUsers?userid=' + _authenticatedUser.userId.toString();
-    if(getAll != null)
-    {
-      url = 'http://dateflix.captainanderz.com/api/users/getall';
-    }
     return http
         .get(url,
             headers: header)
@@ -409,13 +412,11 @@ Future<List<dynamic>>
       print('Calling GetMessages with ' +
           _authenticatedUser.email +
           ', ' +
-          connectionId +
-          ', ' +
           user.email +
           ' as parameters');
 
       List<dynamic> messageData = (await connection.invoke("GetMessages",
-          args: <String>[_authenticatedUser.email, connectionId, user.email]));
+          args: <String>[_authenticatedUser.email, user.email]));
       return messageData;
     });
 }

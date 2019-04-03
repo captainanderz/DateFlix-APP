@@ -27,7 +27,7 @@ class _CreateUserState extends State<CreateUserPage> {
     'year': null,
     'month': null,
     'day': null,
-    'image': 'assets/images/NoPicMale.png',
+    'image': 'assets/images/NoPic.png',
     'gender': 4,
     'bio': '',
     'city': null,
@@ -162,7 +162,7 @@ Widget _buildRadioButton(int value, String title)
 // 3.5.2.8
 // Radio buttons to select gender
   Widget _buildGenderRadioGroup() {
-    return GridView(
+    return GridView(primary: false,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       shrinkWrap: true,
@@ -240,6 +240,7 @@ Widget _buildRadioButton(int value, String title)
   // 3.5.2.13
   Widget _buildBdayGrid() {
     return GridView(
+      primary: false,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       shrinkWrap: true,

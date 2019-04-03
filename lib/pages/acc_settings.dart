@@ -38,7 +38,7 @@ class _AccSeetingsState extends State<AccSettings>
   void initState() {
     super.initState();
     rangeSliders = _rangeSliderDefinitions();
-/*     if (widget.localUser.prefs != null) {
+     /* if (widget.localUser.prefs != null) {
       lowerVal = widget.localUser.prefs[0].roundToDouble();
       upperVal = widget.localUser.prefs[1].roundToDouble();
       if (widget.localUser.prefs[2] == 0) {
@@ -53,8 +53,8 @@ class _AccSeetingsState extends State<AccSettings>
         man = false;
         woman = true;
         other = false;
-      } */
-    //}
+      } 
+    } */
   }
 //3.2.2.2
   List<Widget> _buildRangeSliders() {
@@ -121,7 +121,7 @@ class _AccSeetingsState extends State<AccSettings>
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    return new Scaffold(
+    return new Scaffold(backgroundColor: Theme.of(context).backgroundColor,
         appBar: new AppBar(
           elevation: 1.0,
           brightness: Brightness.dark,
@@ -147,7 +147,7 @@ class _AccSeetingsState extends State<AccSettings>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Card(
+              new Card(color: Color.fromRGBO(38, 35, 35, 1),
                   elevation: 6.0,
                   child: new Container(
                     width: screenSize.width,
@@ -380,6 +380,7 @@ class RangeSliderData {
   Widget build(BuildContext context, RangeSliderCallback callback) {
     Size screenSize = MediaQuery.of(context).size;
     return new Card(
+      color: Color.fromRGBO(38, 35, 35, 1),
         elevation: 6.0,
         child: new Container(
             width: screenSize.width,

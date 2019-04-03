@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
+import '../utilities/alert.dart';
 
 // 3.1.1
 class AuthPage extends StatefulWidget {
@@ -13,7 +14,10 @@ class AuthPage extends StatefulWidget {
 
 // 3.1.2
 class _AuthState extends State<AuthPage> {
-  final Map<String, String> _formData = {'email': null, 'password': null};      // Storage for input data
+  final Map<String, String> _formData = {
+    'email': null,
+    'password': null
+  }; // Storage for input data
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -29,7 +33,8 @@ class _AuthState extends State<AuthPage> {
       validator: (String value) {
         if (value.isEmpty ||
             !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-              .hasMatch(value.toLowerCase())) {                                 // Setting value to lowercase, because this RegExp only accepts lowercase
+                .hasMatch(value.toLowerCase())) {
+          // Setting value to lowercase, because this RegExp only accepts lowercase
           return 'Indtast venligst en gyldig emailadresse';
         }
       },
@@ -44,7 +49,7 @@ class _AuthState extends State<AuthPage> {
   Widget _buildPasswordTextField() {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Password',
+        labelText: 'Adgangskode',
         labelStyle: TextStyle(fontSize: 24),
       ),
       obscureText: true,
@@ -71,7 +76,17 @@ class _AuthState extends State<AuthPage> {
         await authenticate(_formData['email'], _formData['password']);
     if (responseInfo['success']) {
       Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, '/loggedIn');
+      if (responseInfo['message'] == 'Preferences not set') {
+        Navigator.pushReplacementNamed(context, '/acc_settings_first');
+      } else {
+        Navigator.pushReplacementNamed(context, '/loggedIn');
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertText('Fejl!', responseInfo['message']);
+          });
     }
   }
 
@@ -106,8 +121,11 @@ class _AuthState extends State<AuthPage> {
                       builder: (BuildContext context, Widget child,
                           MainModel model) {
                         return model.isLoading
-                            ? Center(child: CircularProgressIndicator())      // Shows loading when then app is loading
-                            : RaisedButton(                                   // Shows login-button when the app isn't loading
+                            ? Center(
+                                child:
+                                    CircularProgressIndicator()) // Shows loading when then app is loading
+                            : RaisedButton(
+                                // Shows login-button when the app isn't loading
                                 padding: EdgeInsets.symmetric(
                                     vertical: 25.0, horizontal: 70.0),
                                 child: Text(

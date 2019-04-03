@@ -3,35 +3,32 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
 import '../widgets/users.dart';
-import '../models/user.dart';
-//3.9.1
+
+//3.8.1
 class ListUsersPage extends StatefulWidget {
   final MainModel model;
 
   ListUsersPage(this.model);
-//3.9.1.1
+//3.8.1.1
   @override
   State<StatefulWidget> createState() {
-    return _UserListStage();
+    return _UserListState();
   }
 }
-//3.9.2
-class _UserListStage extends State<ListUsersPage> {
+
+//3.8.2
+class _UserListState extends State<ListUsersPage> {
   //3.9.2.1
   @override
   void initState() {
     widget.model.fetchUsers();
     super.initState();
   }
-//3.9.2.2
+
+//3.8.2.2
   Widget _buildUserList() {
     return ScopedModelDescendant(
         builder: (BuildContext context, Widget child, MainModel model) {
-          if(model.newMatch)
-          {
-            //showDialog();
-          }
-
       Widget content = Center(
         child: Text('Ingen brugere fundet FRA LIST_USERS.DART'),
       );
@@ -46,12 +43,20 @@ class _UserListStage extends State<ListUsersPage> {
       );
     });
   }
+
 //3.9.2.3
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: Text('Dateflix brugere'),
+          backgroundColor: Theme.of(context).backgroundColor,
+          brightness: Brightness.dark,
+          title: Text(
+            'Dateflix brugere',
+            style: TextStyle(
+                color: Color.fromRGBO(220, 28, 39, 1), fontSize: 32.0),
+          ),
         ),
         body: _buildUserList());
   }

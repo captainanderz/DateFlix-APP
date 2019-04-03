@@ -20,6 +20,7 @@ class UserCard extends StatelessWidget {
     }
     return Text('Andet');
   }
+
 //7.1.1.1
   Widget _buildActionButtons(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
@@ -43,6 +44,7 @@ class UserCard extends StatelessWidget {
                 icon: Icon(Icons.check_circle),
                 color: Colors.green,
                 onPressed: () async {
+                  model.users.removeAt(userIndex);
                   bool matched =
                       await model.likeProfile(model.user.userId, user.userId);
                   if (matched) {
@@ -59,7 +61,7 @@ class UserCard extends StatelessWidget {
                               )
                             ],
                           );
-                        model.users.removeAt(userIndex);});
+                        });
                   }
                 })
           ],
@@ -87,7 +89,6 @@ class UserCard extends StatelessWidget {
 //                 );
 //               }
 
-
   //7.1.1.2
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,7 @@ class UserCard extends StatelessWidget {
         ? bdayToAge(user.birthday).toString()
         : '!?';
 
-    return Card(
+    return Card(color: Color.fromRGBO(38, 34, 34, 1),
       child: Column(
         children: <Widget>[
           user.hasPicture
