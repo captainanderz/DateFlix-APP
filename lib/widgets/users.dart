@@ -17,7 +17,7 @@ class Users extends StatelessWidget {
       );
     } else {
       userCards = Center(
-        child: Text('Ingen brugere fundet FRA USERS.DART'),
+        child: Text('Ingen brugere fundet'),
       );
     }
     return userCards;

@@ -16,8 +16,8 @@ DateTime stringToDateTime(String bdayString) {
   print('year: ' + bdayString.substring(0,4));
   print('month: ' + bdayString.substring(5,7));
   print('day: ' + bdayString.substring(8,10));
-  int year = int.parse(bdayString.substring(0,3));
-  int month  = int.parse(bdayString.substring(5,6));
-  int day = int.parse(bdayString.substring(8,9));
+  int year = int.parse(bdayString.substring(0,4));
+  int month  = int.parse(bdayString.substring(5,7));
+  int day = int.parse(bdayString.substring(8,10));
   return DateTime(year, month, day);
 }
