@@ -166,8 +166,11 @@ mixin UsersModel on ConnectedModels {
     String message = 'Hovsa... Noget gik galt';
 
     header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    print(header);
 
     http.Response response = await http.delete('http://dateflix.captainanderz.com/api/users/' + _authenticatedUser.userId.toString());
+    print(response);
+    print(response.statusCode);
     if(response.statusCode == 200 || response.statusCode == 201)
     {
       success = true;
@@ -348,16 +351,15 @@ mixin UsersModel on ConnectedModels {
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/date/like',
         headers: header,
-        body: json.encode({"userId": userId, "likedId": likedId}));
+        body: json.encode({"UserId": userId, "LikedId": likedId}));
     print(response);
-    if (response.body.isNotEmpty) {
+
       print(json.decode(response.body));
-      if (json.decode(response.body)) {
+      if (json.decode(response.body) == 'Match happened!') {
         isLoading = false;
         notifyListeners();
         return true;
       }
-    }
     isLoading = false;
     notifyListeners();
     return false;
