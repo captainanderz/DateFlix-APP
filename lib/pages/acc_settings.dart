@@ -53,7 +53,7 @@ class _AccSeetingsState extends State<AccSettings>
         man = false;
         woman = true;
         other = false;
-      } 
+      }
     } */
   }
 //3.2.2.2
@@ -340,19 +340,11 @@ class RangeSliderData {
   bool showValueIndicator;
   int valueIndicatorMaxDecimals;
   bool forceValueIndicator;
-  Color overlayColor;
   Color activeTrackColor;
   Color inactiveTrackColor;
   Color thumbColor;
   Color valueIndicatorColor;
-  Color activeTickMarkColor;
 
-  static const Color defaultActiveTrackColor = null;
-  static const Color defaultInactiveTrackColor = null;
-  static const Color defaultActiveTickMarkColor = null;
-  static const Color defaultThumbColor = null;
-  static const Color defaultValueIndicatorColor = null;
-  static const Color defaultOverlayColor = null;
 //3.2.3.1
   RangeSliderData({
     this.min,
@@ -363,12 +355,10 @@ class RangeSliderData {
     this.showValueIndicator: true,
     this.valueIndicatorMaxDecimals: 0,
     this.forceValueIndicator: false,
-    this.overlayColor: null,
     this.activeTrackColor: null,
     this.inactiveTrackColor: null,
     this.thumbColor: null,
     this.valueIndicatorColor: null,
-    this.activeTickMarkColor: null,
   });
 
   String get lowerValueText =>
@@ -405,8 +395,6 @@ class RangeSliderData {
                     new Expanded(
                       child: new SliderTheme(
                         data: SliderTheme.of(context).copyWith(
-                          overlayColor: overlayColor,
-                          activeTickMarkColor: activeTickMarkColor,
                           activeTrackColor: activeTrackColor,
                           inactiveTrackColor: inactiveTrackColor,
                           thumbColor: thumbColor,
