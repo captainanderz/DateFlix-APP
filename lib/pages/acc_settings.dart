@@ -181,8 +181,8 @@ class _AccSeetingsState extends State<AccSettings>
                                   }
                                 });
                               },
-                              activeColor: Colors.red,
-                              activeTrackColor: Colors.red,
+                              activeColor: Colors.red.shade900,
+                              activeTrackColor: Colors.red.shade900,
                             )),
                         new ListTile(
                             title: new Text(
@@ -201,8 +201,8 @@ class _AccSeetingsState extends State<AccSettings>
                                   }
                                 });
                               },
-                              activeColor: Colors.red,
-                              activeTrackColor: Colors.red,
+                              activeColor: Colors.red.shade900,
+                              activeTrackColor: Colors.red.shade900,
                             )),
                         new ListTile(
                           title: new Text(
@@ -221,8 +221,8 @@ class _AccSeetingsState extends State<AccSettings>
                                 }
                               });
                             },
-                            activeColor: Colors.red,
-                            activeTrackColor: Colors.red,
+                            activeColor: Colors.red.shade900,
+                            activeTrackColor: Colors.red.shade900,
                           ),
                         )
                       ],
