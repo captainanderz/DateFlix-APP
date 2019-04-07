@@ -274,11 +274,13 @@ mixin UsersModel on ConnectedModels {
             firstName: userData['firstName'],
             birthday: stringToDateTime(userData['birthday']),
             email: userData['email'],
-            gender: userData[9],
+            gender: userData['gender'],
             picture: userData[7],
             hasPicture: false,
             city: userData[8],
             description: userData[10]);
+        print(userData['gender']);
+        print(user.gender);
         fetchedUsers.add(user);
       });
       _users = fetchedUsers;

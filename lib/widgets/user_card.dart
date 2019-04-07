@@ -13,12 +13,18 @@ class UserCard extends StatelessWidget {
   UserCard(this.user, this.userIndex);
 
   Widget genToText(User user) {
+    String gender = 'Andet';
     if (user.gender == 0) {
-      return Text('Mand');
+      gender = 'Mand';
     } else if (user.gender == 1) {
-      return Text('Kvinde');
+      gender = 'Kvinde';
     }
-    return Text('Andet');
+    return Text(
+      gender,
+      style: TextStyle(
+        fontSize: 20,
+      ),
+    );
   }
 
 //7.1.1.1
@@ -96,7 +102,8 @@ class UserCard extends StatelessWidget {
         ? bdayToAge(user.birthday).toString()
         : '!?';
 
-    return Card(color: Color.fromRGBO(38, 34, 34, 1),
+    return Card(
+      color: Color.fromRGBO(38, 34, 34, 1),
       child: Column(
         children: <Widget>[
           user.hasPicture
@@ -108,14 +115,21 @@ class UserCard extends StatelessWidget {
                 )
               : Image.asset('assets/images/noPic.png'),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Text(user.firstName == null ? 'FEJL' : user.firstName),
-            SizedBox(width: 10,),
+            Text(
+              user.firstName == null ? 'FEJL' : user.firstName,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              width: 10,
+            ),
             genToText(user),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Text(
               age,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
               ),
             ),
           ]),
