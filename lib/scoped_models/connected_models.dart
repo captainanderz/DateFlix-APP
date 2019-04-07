@@ -57,8 +57,7 @@ mixin LocalUserModel on ConnectedModels {
     print(responseData['message']);
     isLoading = false;
     notifyListeners();
-    if(response.statusCode == 400)
-    {
+    if (response.statusCode == 400 && !responseData.containsKey('message')) {
       return {'success': !hasError, 'message': message};
     }
     if (!responseData.containsKey('message')) {
@@ -165,14 +164,16 @@ mixin UsersModel on ConnectedModels {
     String title = 'Fejl';
     String message = 'Hovsa... Noget gik galt';
 
-    header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    header.putIfAbsent(
+        'Authorization', () => 'Bearer ' + _authenticatedUser.token);
     print(header);
 
-    http.Response response = await http.delete('http://dateflix.captainanderz.com/api/users/' + _authenticatedUser.userId.toString());
+    http.Response response = await http.delete(
+        'http://dateflix.captainanderz.com/api/users/' +
+            _authenticatedUser.userId.toString());
     print(response);
     print(response.statusCode);
-    if(response.statusCode == 200 || response.statusCode == 201)
-    {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       success = true;
       title = 'Bruger slettet';
       message = 'Vi håber du vender tilbage igen';
@@ -185,7 +186,7 @@ mixin UsersModel on ConnectedModels {
     notifyListeners();
     final String bday =
         user['year'] + '-' + user['month'] + '-' + user['day'] + 'T00:00:00';
-        print(bday);
+    print(bday);
     final Map<String, dynamic> newUser = {
       'firstName': user['firstname'],
       'lastName': 'TestFromApp',
@@ -228,7 +229,8 @@ mixin UsersModel on ConnectedModels {
 
     var body = json.encode(prefs);
 
-    header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    header.putIfAbsent(
+        'Authorization', () => 'Bearer ' + _authenticatedUser.token);
 
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/users/UpdateUserPreference?userid=' +
@@ -251,14 +253,14 @@ mixin UsersModel on ConnectedModels {
     isLoading = true;
     notifyListeners();
 
-    header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    header.putIfAbsent(
+        'Authorization', () => 'Bearer ' + _authenticatedUser.token);
     print(header);
-    
-    String url = 'http://dateflix.captainanderz.com/api/date/GetMatchingUsers?userid=' + _authenticatedUser.userId.toString();
-    return http
-        .get(url,
-            headers: header)
-        .then<Null>((http.Response response) {
+
+    String url =
+        'http://dateflix.captainanderz.com/api/date/GetMatchingUsers?userid=' +
+            _authenticatedUser.userId.toString();
+    return http.get(url, headers: header).then<Null>((http.Response response) {
       final List<User> fetchedUsers = [];
       final List<dynamic> userListData = json.decode(response.body);
       if (userListData == null) {
@@ -279,8 +281,6 @@ mixin UsersModel on ConnectedModels {
             hasPicture: false,
             city: userData[8],
             description: userData[10]);
-        print(userData['gender']);
-        print(user.gender);
         fetchedUsers.add(user);
       });
       _users = fetchedUsers;
@@ -298,12 +298,13 @@ mixin UsersModel on ConnectedModels {
 
   String connectionId;
 
-  Future<Null> fetchMatches() async {
+  Future<Null> fetchMatches() {
     isLoading = true;
     String id = _authenticatedUser.userId.toString();
     notifyListeners();
     //await getConnectionId();
-    header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    header.putIfAbsent(
+        'Authorization', () => 'Bearer ' + _authenticatedUser.token);
     return http
         .get('http://dateflix.captainanderz.com/api/date/matches?userid=' + id,
             headers: header)
@@ -346,22 +347,21 @@ mixin UsersModel on ConnectedModels {
 
   //5.1.3.4
   Future<bool> likeProfile(int userId, int likedId) async {
+    print(userId);
+    print(likedId);
     isLoading = true;
     notifyListeners();
 
-    header.putIfAbsent('Authorization', () =>'Bearer '+ _authenticatedUser.token);
+    print(json.encode({"UserId": userId, "LikedId": likedId}));
+    
+    header.putIfAbsent(
+        'Authorization', () => 'Bearer ' + _authenticatedUser.token);
     http.Response response = await http.post(
         'http://dateflix.captainanderz.com/api/date/like',
         headers: header,
         body: json.encode({"UserId": userId, "LikedId": likedId}));
     print(response);
-
-      print(json.decode(response.body));
-      if (json.decode(response.body) == 'Match happened!') {
-        isLoading = false;
-        notifyListeners();
-        return true;
-      }
+print(response.body);
     isLoading = false;
     notifyListeners();
     return false;
@@ -425,16 +425,16 @@ mixin UsersModel on ConnectedModels {
     }
   }
 
-Future<List<dynamic>>
-  getMessages(User user) async => await getConnectionId().then((void message) async {
-      print('Calling GetMessages with ' +
-          _authenticatedUser.email +
-          ', ' +
-          user.email +
-          ' as parameters');
+  Future<List<dynamic>> getMessages(User user) async =>
+      await getConnectionId().then((void message) async {
+        print('Calling GetMessages with ' +
+            _authenticatedUser.email +
+            ', ' +
+            user.email +
+            ' as parameters');
 
-      List<dynamic> messageData = (await connection.invoke("GetMessages",
-          args: <String>[_authenticatedUser.email, user.email]));
-      return messageData;
-    });
+        List<dynamic> messageData = (await connection.invoke("GetMessages",
+            args: <String>[_authenticatedUser.email, user.email]));
+        return messageData;
+      });
 }
